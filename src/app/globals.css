@@ -1137,7 +1137,9 @@ section {
 .footer__wordmark span {
   display: block;
   font-size: clamp(3.2rem, 12vw, 8.5rem);
-  font-weight: 800;
+  font-family: var(--font-mono);
+  /* font-size: 3.8rem; */
+  font-weight: 600;
   line-height: 1;
   color: var(--yellow);
   letter-spacing: -0.02em;

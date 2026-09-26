@@ -45,7 +45,7 @@ export default function Footer() {
 
         <div className="footer__bottom">
           <span>© {new Date().getFullYear()} Make It Print. All rights reserved.</span>
-          <span>Crafted in Chh. Sambhajinagar · Shipped worldwide</span>
+          <span>Crafted in Chh. Sambhajinagar · Shipped all over india</span>
         </div>
       </div>
     </footer>
