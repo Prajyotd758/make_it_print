@@ -14,15 +14,22 @@ export function revealOnScroll(
   if (!scope) return;
   const { trigger, start = "top 85%", stagger = 0 } = options;
 
-  gsap.utils.toArray(scope.querySelectorAll(selector)).forEach((el, i) => {
-    gsap.from(el as Element, {
-      opacity: 0,
-      y: 28,
+  const els = gsap.utils.toArray<Element>(scope.querySelectorAll(selector));
+
+  els.forEach((el, i) => {
+    gsap.set(el, { opacity: 0, y: 28 });
+
+    gsap.to(el, {
+      opacity: 1,
+      y: 0,
       duration: 0.8,
       delay: i * stagger,
+      ease: "power2.out",
       scrollTrigger: {
-        trigger: trigger ?? (el as Element),
+        trigger: trigger ?? el,
         start,
+        once: true,
+        invalidateOnRefresh: true,
       },
     });
   });
