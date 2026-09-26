@@ -13,7 +13,7 @@ const ITEMS = [
     img: "/elephant_mode.webp",
   },
   { title: "Gojo Figure", meta: "FDM · PLA", dark: true, img: "/gojo.png" },
-  { title: "Decorative Pot", meta: "FDM · PLA", dark: false, img: "/pot.webp" },
+  { title: "Decorative Lamp", meta: "FDM · PLA", dark: false, img: "/pot.webp" },
   { title: "Prop Gun", meta: "FDM · PETG", dark: true, img: "/gun.webp" },
   {
     title: "Batman Mask",

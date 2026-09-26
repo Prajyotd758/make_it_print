@@ -57,7 +57,7 @@ const REVIEWS = [
     text: "Really satisfied with the quality of the printed product. The process was smooth and the team was helpful with the requirements.",
   },
   {
-    name: "Prajot Dange",
+    name: "Prajyot Dange",
     tag: "Prototype & Custom Part",
     text: "Professional service and good print quality. Make It Print is a useful option for anyone looking for customized 3D printed parts and prototypes.",
   },
