@@ -13,16 +13,18 @@ const STATS = [
 ];
 
 export default function Modules() {
-  const root = useRef(null);
+  const root = useRef<HTMLElement>(null);
 
   useEffect(() => {
+    if (!root.current) return;
+
     const ctx = gsap.context(() => {
       revealOnScroll(root.current, ".reveal", { trigger: root.current });
 
-      const nums = root.current.querySelectorAll(".stat__num");
+      const nums = root.current!.querySelectorAll<HTMLElement>(".stat__num");
       nums.forEach((el) => {
-        const target = parseFloat(el.dataset.value);
-        const decimals = parseInt(el.dataset.decimals, 10);
+        const target = parseFloat(el.dataset.value || "0");
+        const decimals = parseInt(el.dataset.decimals || "0", 10);
         const suffix = el.dataset.suffix || "";
         const counter = { val: 0 };
         gsap.to(counter, {
@@ -40,7 +42,11 @@ export default function Modules() {
   }, []);
 
   return (
-    <section className="section" ref={root} style={{ paddingBottom: 0 }}>
+    <section
+      className="section"
+      ref={root as React.RefObject<HTMLElement>}
+      style={{ paddingBottom: 0 }}
+    >
       <div className="wrap">
         <div className="modules__cta reveal">
           <div>

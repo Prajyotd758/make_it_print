@@ -1,26 +1,29 @@
-"use client";
-
 import { gsap } from "@/lib/gsap";
 
-/**
- * Reveals matched elements (assumed to carry the .reveal class, which sets
- * opacity:0 + translateY via CSS) as they enter the viewport. Call inside a
- * gsap.context() scoped useEffect.
- */
-export function revealOnScroll(scope, selector, opts = {}) {
-  const els = scope.querySelectorAll(selector);
-  if (!els.length) return;
+interface RevealOptions {
+  trigger?: Element | string | null;
+  start?: string;
+  stagger?: number;
+}
 
-  gsap.to(els, {
-    opacity: 1,
-    y: 0,
-    duration: 0.9,
-    ease: "power3.out",
-    stagger: opts.stagger ?? 0.1,
-    scrollTrigger: {
-      trigger: opts.trigger || els[0],
-      start: opts.start || "top 85%",
-      once: true,
-    },
+export function revealOnScroll(
+  scope: Element | null,
+  selector: string,
+  options: RevealOptions = {}
+) {
+  if (!scope) return;
+  const { trigger, start = "top 85%", stagger = 0 } = options;
+
+  gsap.utils.toArray(scope.querySelectorAll(selector)).forEach((el, i) => {
+    gsap.from(el as Element, {
+      opacity: 0,
+      y: 28,
+      duration: 0.8,
+      delay: i * stagger,
+      scrollTrigger: {
+        trigger: trigger ?? (el as Element),
+        start,
+      },
+    });
   });
 }

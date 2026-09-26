@@ -21,7 +21,11 @@ export const metadata = {
     "Custom models and toys for makers. Precision 3D printing, engineering drawings, miniature fabrication and custom toys from Make It Print.",
 };
 
-export default function RootLayout({ children }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en">
       <body className={`${display.variable} ${mono.variable}`}>{children}</body>

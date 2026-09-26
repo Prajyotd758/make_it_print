@@ -1,4 +1,4 @@
-export function IconArrow(props) {
+export function IconArrow(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg viewBox="0 0 20 20" fill="none" {...props}>
       <path
@@ -12,7 +12,7 @@ export function IconArrow(props) {
   );
 }
 
-export function IconCheck(props) {
+export function IconCheck(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg viewBox="0 0 20 20" fill="none" {...props}>
       <circle cx="10" cy="10" r="8.5" stroke="currentColor" strokeWidth="1.4" />
@@ -27,7 +27,7 @@ export function IconCheck(props) {
   );
 }
 
-export function IconCube(props) {
+export function IconCube(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg viewBox="0 0 24 24" fill="none" {...props}>
       <path
@@ -36,30 +36,51 @@ export function IconCube(props) {
         strokeWidth="1.6"
         strokeLinejoin="round"
       />
-      <path d="M4 7.5L12 12l8-4.5M12 12v9" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+      <path
+        d="M4 7.5L12 12l8-4.5M12 12v9"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinejoin="round"
+      />
     </svg>
   );
 }
 
-export function IconDraft(props) {
+export function IconDraft(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg viewBox="0 0 24 24" fill="none" {...props}>
-      <path d="M4 20L20 4M9 4h11v11" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+      <path
+        d="M4 20L20 4M9 4h11v11"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
       <circle cx="6" cy="18" r="2" stroke="currentColor" strokeWidth="1.6" />
     </svg>
   );
 }
 
-export function IconGem(props) {
+export function IconGem(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg viewBox="0 0 24 24" fill="none" {...props}>
-      <path d="M4 9l4-5h8l4 5-10 12L4 9z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
-      <path d="M4 9h16M9.5 4L8 9l4 12 4-12-1.5-5" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+      <path
+        d="M4 9l4-5h8l4 5-10 12L4 9z"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M4 9h16M9.5 4L8 9l4 12 4-12-1.5-5"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinejoin="round"
+      />
     </svg>
   );
 }
 
-export function IconToy(props) {
+export function IconToy(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg viewBox="0 0 24 24" fill="none" {...props}>
       <circle cx="12" cy="7" r="3.2" stroke="currentColor" strokeWidth="1.6" />
@@ -73,7 +94,7 @@ export function IconToy(props) {
   );
 }
 
-export function IconPhone(props) {
+export function IconPhone(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg viewBox="0 0 24 24" fill="none" {...props}>
       <path
@@ -86,16 +107,30 @@ export function IconPhone(props) {
   );
 }
 
-export function IconMail(props) {
+export function IconMail(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg viewBox="0 0 24 24" fill="none" {...props}>
-      <rect x="3.5" y="5.5" width="17" height="13" rx="2" stroke="currentColor" strokeWidth="1.5" />
-      <path d="M4.5 6.5l7.5 6 7.5-6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+      <rect
+        x="3.5"
+        y="5.5"
+        width="17"
+        height="13"
+        rx="2"
+        stroke="currentColor"
+        strokeWidth="1.5"
+      />
+      <path
+        d="M4.5 6.5l7.5 6 7.5-6"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
     </svg>
   );
 }
 
-export function IconPin(props) {
+export function IconPin(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg viewBox="0 0 24 24" fill="none" {...props}>
       <path
@@ -104,15 +139,29 @@ export function IconPin(props) {
         strokeWidth="1.5"
         strokeLinejoin="round"
       />
-      <circle cx="12" cy="9.5" r="2.4" stroke="currentColor" strokeWidth="1.5" />
+      <circle
+        cx="12"
+        cy="9.5"
+        r="2.4"
+        stroke="currentColor"
+        strokeWidth="1.5"
+      />
     </svg>
   );
 }
 
-export function IconInsta(props) {
+export function IconInsta(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg viewBox="0 0 24 24" fill="none" {...props}>
-      <rect x="3.5" y="3.5" width="17" height="17" rx="5" stroke="currentColor" strokeWidth="1.5" />
+      <rect
+        x="3.5"
+        y="3.5"
+        width="17"
+        height="17"
+        rx="5"
+        stroke="currentColor"
+        strokeWidth="1.5"
+      />
       <circle cx="12" cy="12" r="4" stroke="currentColor" strokeWidth="1.5" />
       <circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" />
     </svg>

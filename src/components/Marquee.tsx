@@ -28,7 +28,9 @@ export default function Marquee() {
       repeat: -1,
     });
 
-    return () => tween.kill();
+    return () => {
+      tween.kill();
+    };
   }, []);
 
   const row = TAGS.map((t) => <span key={t}>{t}</span>);
