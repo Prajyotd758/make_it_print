@@ -203,11 +203,7 @@ export default function Hero() {
 
         <div className="hero__art" aria-hidden="true">
           <div className="hero__block hero__block--a">
-            <img
-              src="/printer3.jpeg"
-              alt=""
-              className="hero__block-img"
-            />
+            <img src="/printer3.jpeg" alt="" className="hero__block-img" />
           </div>
 
           <div className="hero__block hero__block--b dots" />
