@@ -13,8 +13,8 @@ export default function Footer() {
               makeitprint.
             </div>
             <p className="footer__tagline">
-              Precision 3D art, CAD &amp; custom fabrication for makers who
-              care about detail.
+              Precision 3D art, CAD &amp; custom fabrication for makers who care
+              about detail.
             </p>
           </div>
 
@@ -44,7 +44,9 @@ export default function Footer() {
         </div>
 
         <div className="footer__bottom">
-          <span>© {new Date().getFullYear()} Make It Print. All rights reserved.</span>
+          <span>
+            © {new Date().getFullYear()} Make It Print. All rights reserved.
+          </span>
           <span>Crafted in Chh. Sambhajinagar · Shipped all over india</span>
         </div>
       </div>

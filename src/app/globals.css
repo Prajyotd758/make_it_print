@@ -259,6 +259,10 @@ button {
   background: var(--yellow);
 }
 
+.logo {
+  height : 50px
+}
+
 .nav__brand .dot {
   color: var(--yellow-deep);
 }

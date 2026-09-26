@@ -17,10 +17,11 @@ export default function Nav() {
     <header className={`nav ${scrolled ? "is-scrolled" : ""}`}>
       <div className="nav__inner">
         <a href="#top" className="nav__brand">
-          <span className="nav__mark" aria-hidden="true">
-            <span />
-          </span>
-          makeitprint<span className="dot">.</span>
+          {/* <span className="nav__mark" aria-hidden="true">
+          </span> */}
+          <div>
+            <img src="/logo.png" alt="" className="logo" />
+          </div>
         </a>
 
         <nav className="nav__links" aria-label="Primary">
