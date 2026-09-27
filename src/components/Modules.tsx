@@ -7,7 +7,7 @@ import { IconArrow } from "@/components/icons";
 
 const STATS = [
   { value: 500, decimals: 0, suffix: "+", label: "Projects Delivered" },
-  { value: 0.05, decimals: 2, suffix: "mm", label: "Print Precision" },
+  { value: 0.2, decimals: 2, suffix: "mm", label: "Print Precision" },
   { value: 48, decimals: 0, suffix: "h", label: "Avg. Turnaround" },
   { value: 12, decimals: 0, suffix: "+", label: "Materials Supported" },
 ];

@@ -169,7 +169,7 @@ export default function Hero() {
 
           <h1 className="hero__title">
             <span className="testing">
-              From Blueprint to Physical Precision
+              From Blueprint to Physical Product
             </span>
           </h1>
 

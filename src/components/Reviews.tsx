@@ -61,7 +61,7 @@ const REVIEWS = [
     tag: "Prototype & Custom Part",
     text: "Professional service and good print quality. Make It Print is a useful option for anyone looking for customized 3D printed parts and prototypes.",
   },
-];
+]; 
 
 const GAP = 22;
 const AUTO_MS = 5000;
