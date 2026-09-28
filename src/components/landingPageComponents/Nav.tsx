@@ -40,15 +40,40 @@ export default function Nav() {
         </nav>
 
         <div className="nav__actions">
-          <Link href="/wishlist" className="nav__icon" aria-label="Wishlist" onClick={closeMenu}>
-            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round">
+          {/* <Link href="/wishlist" className="nav__icon" aria-label="Wishlist" onClick={closeMenu}> */}
+          <div>
+            <svg
+              width="30"
+              height="30"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.2"
+              strokeLinejoin="round"
+            >
               <path d="M12 20.5s-7.5-4.6-9.2-9.4C1.7 7.900 3.600 4.800 6.800 4.800c2 0 3.500 1.100 5.200 3.100 1.700-2 3.200-3.100 5.200-3.100 3.200 0 5.100 3.100 4 6.300-1.700 4.800-9.200 9.400-9.200 9.400z" />
             </svg>
-            {wishlistCount > 0 && <span className="nav__badge">{wishlistCount}</span>}
-          </Link>
+            {wishlistCount > 0 && (
+              <span className="nav__badge">{wishlistCount}</span>
+            )}
+          </div>
 
-          <Link href="/cart" className="nav__icon" aria-label="Cart" onClick={closeMenu}>
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round" strokeLinecap="round">
+          <Link
+            href="/cart"
+            className="nav__icon"
+            aria-label="Cart"
+            onClick={closeMenu}
+          >
+            <svg
+              width="32"
+              height="32"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.2"
+              strokeLinejoin="round"
+              strokeLinecap="round"
+            >
               <path d="M5 8h14l-1 12H6L5 8z" />
               <path d="M9 8V6.500a3 3 0 016 0V8" />
             </svg>
@@ -63,7 +88,12 @@ export default function Nav() {
           >
             {menuOpen ? (
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                <path d="M1 1L13 13M13 1L1 13" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+                <path
+                  d="M1 1L13 13M13 1L1 13"
+                  stroke="currentColor"
+                  strokeWidth="1.6"
+                  strokeLinecap="round"
+                />
               </svg>
             ) : (
               <svg width="16" height="12" viewBox="0 0 16 12" fill="none">
@@ -75,10 +105,18 @@ export default function Nav() {
       </div>
 
       <div className={`nav__mobile ${menuOpen ? "is-open" : ""}`}>
-        <Link href="/#services" onClick={closeMenu}>Services</Link>
-        <Link href="/#work" onClick={closeMenu}>Our Work</Link>
-        <Link href="/products" onClick={closeMenu}>Products</Link>
-        <Link href="/#contact" onClick={closeMenu}>Contact</Link>
+        <Link href="/#services" onClick={closeMenu}>
+          Services
+        </Link>
+        <Link href="/#work" onClick={closeMenu}>
+          Our Work
+        </Link>
+        <Link href="/products" onClick={closeMenu}>
+          Products
+        </Link>
+        <Link href="/#contact" onClick={closeMenu}>
+          Contact
+        </Link>
       </div>
     </header>
   );

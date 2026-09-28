@@ -28,10 +28,10 @@
   pointer-events: none;
 }
 .pl::before {
-  top: -240px;
-  right: -190px;
-  width: 360px;
-  height: 360px;
+  top: -260px;
+  right: -200px;
+  width: 400px;
+  height: 400px;
   background: var(--yellow);
   opacity: 0.9;
   border-radius: 50%;
