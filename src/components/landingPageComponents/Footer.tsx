@@ -1,4 +1,4 @@
-import { IconInsta } from "@/components/icons";
+import { IconInsta } from "@/components/landingPageComponents/icons";
 
 export default function Footer() {
   return (

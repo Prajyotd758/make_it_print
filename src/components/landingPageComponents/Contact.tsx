@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import { gsap } from "@/lib/gsap";
 import { revealOnScroll } from "@/lib/scrollReveal";
-import { IconMail, IconPhone, IconPin } from "@/components/icons";
+import { IconMail, IconPhone, IconPin } from "@/components/landingPageComponents/icons";
 
 export default function Contact() {
   const root = useRef(null);

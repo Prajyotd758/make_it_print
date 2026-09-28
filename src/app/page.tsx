@@ -1,18 +1,16 @@
-import Nav from "@/components/Nav";
-import Hero from "@/components/Hero";
-import Marquee from "@/components/Marquee";
-import Services from "@/components/Services";
-import Modules from "@/components/Modules";
-import Gallery from "@/components/Gallery";
-import Customers from "@/components/Customers";
-import Reviews from "@/components/Reviews";
-import Contact from "@/components/Contact";
-import Footer from "@/components/Footer";
+import Hero from "@/components/landingPageComponents/Hero";
+import Marquee from "@/components/landingPageComponents/Marquee";
+import Services from "@/components/landingPageComponents/Services";
+import Modules from "@/components/landingPageComponents/Modules";
+import Gallery from "@/components/landingPageComponents/Gallery";
+import Customers from "@/components/landingPageComponents/Customers";
+import Reviews from "@/components/landingPageComponents/Reviews";
+import Contact from "@/components/landingPageComponents/Contact";
+import Footer from "@/components/landingPageComponents/Footer";
 
 export default function Home() {
   return (
     <>
-      <Nav />
       <main>
         <Hero />
         <Marquee />

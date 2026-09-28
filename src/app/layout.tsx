@@ -1,4 +1,5 @@
 import { Space_Grotesk, JetBrains_Mono } from "next/font/google";
+import Nav from "@/components/landingPageComponents/Nav";
 import "./globals.css";
 
 const display = Space_Grotesk({
@@ -28,7 +29,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${display.variable} ${mono.variable}`}>{children}</body>
+      <body>
+        <Nav />
+        {children}
+      </body>
     </html>
   );
 }

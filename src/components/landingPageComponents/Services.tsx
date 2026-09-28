@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import { gsap } from "@/lib/gsap";
 import { revealOnScroll } from "@/lib/scrollReveal";
-import { IconArrow, IconCube, IconDraft, IconGem, IconToy } from "@/components/icons";
+import { IconArrow, IconCube, IconDraft, IconGem, IconToy } from "@/components/landingPageComponents/icons";
 
 const SERVICES = [
   {

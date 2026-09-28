@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import { gsap } from "@/lib/gsap";
 import { revealOnScroll } from "@/lib/scrollReveal";
-import { IconArrow } from "@/components/icons";
+import { IconArrow } from "@/components/landingPageComponents/icons";
 
 const ITEMS = [
   {

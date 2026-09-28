@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
-import "../styles/Reviews.css";
+import "../../styles/Reviews.css";
 
 const CLIENTS = [
   { name: "Sterlite Technologies Limited", tag: "STL" },

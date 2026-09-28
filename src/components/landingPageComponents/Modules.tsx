@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
 import { revealOnScroll } from "@/lib/scrollReveal";
-import { IconArrow } from "@/components/icons";
+import { IconArrow } from "@/components/landingPageComponents/icons";
 
 const STATS = [
   { value: 500, decimals: 0, suffix: "+", label: "Projects Delivered" },

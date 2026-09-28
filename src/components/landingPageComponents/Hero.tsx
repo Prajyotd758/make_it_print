@@ -2,7 +2,7 @@
 
 import { useLayoutEffect, useRef } from "react";
 import { gsap } from "@/lib/gsap";
-import { IconArrow, IconCheck } from "@/components/icons";
+import { IconArrow, IconCheck } from "@/components/landingPageComponents/icons";
 
 export default function Hero() {
   const root = useRef<HTMLElement>(null);
