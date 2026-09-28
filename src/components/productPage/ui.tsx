@@ -1,5 +1,5 @@
 import { CATEGORIES } from "./data";
-import type { Product } from "./types";
+import type { Product } from "@/lib/types";
 
 export const thumbBg = (h: number): string =>
   `linear-gradient(135deg,hsl(${42 + (h % 10)} 55% 94%),hsl(${44 + (h % 10)} 60% 85%))`;

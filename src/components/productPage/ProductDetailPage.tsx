@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { PRODUCTS } from "./data";
-import type { Product } from "./types";
+import type { Product } from "@/lib/types";
 import { Star, categoryName, code, discount, inr, thumbBg } from "./ui";
 import "./product-detail.css";
 

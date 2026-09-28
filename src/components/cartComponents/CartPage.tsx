@@ -2,7 +2,7 @@
 
 import { useMemo, useState, type ReactNode } from "react";
 import { PRODUCTS } from "@/components/productPage/data";
-import type { CartItem, Product } from "./types";
+import type { CartItem, Product } from "@/lib/types";
 import { categoryName, inr, thumbBg } from "../productPage/ui";
 import "./cart.css";
 
