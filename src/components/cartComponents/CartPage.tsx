@@ -196,7 +196,7 @@ export default function CartPage({
                   onClick={() => onOpenProduct(p)}
                   aria-label={p.title}
                 >
-                  {p.image && <img src={p.image} alt={p.title} />}
+                  {p.images && <img src={p.images[0]} alt={p.title} />}
                 </button>
 
                 <div className="cart-info">
