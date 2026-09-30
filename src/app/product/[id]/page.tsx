@@ -15,7 +15,7 @@ export default function Page() {
       key={id}
       product={product}
       onBack={() => router.push("/products")}
-      onOpenProduct={(p) => router.push(`/products/${p.id}`)}
+      onOpenProduct={(p) => router.push(`/product/${p.id}`)}
     />
   );
 }
