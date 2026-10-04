@@ -2,8 +2,7 @@ import NextAuth, { type NextAuthOptions } from "next-auth";
 import type { JWT } from "next-auth/jwt";
 import CredentialsProvider from "next-auth/providers/credentials";
 
-const API_URL =
-  process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000/api/v1";
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 interface Tokens {
   accessToken: string;
@@ -33,14 +32,14 @@ async function callAuth<T>(
   path: string,
   body: unknown
 ): Promise<AuthResult<T>> {
+  console.log("process.env.INTERNAL_API_KEY : ",process.env.INTERNAL_API_KEY);
+  
   try {
     const res = await fetch(`${API_URL}/auth/${path}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "x-internal-key":
-          process.env.INTERNAL_API_KEY! ||
-          "f6d33283c6313f8fca9ce8006f66f9aa9940dd1302ccdf789b3dbe3a959221270f1d363dd95c6441b5259defa7c80bd7",
+        "x-internal-key": process.env.INTERNAL_API_KEY!,
       },
       body: JSON.stringify(body),
     });

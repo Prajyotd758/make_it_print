@@ -1,5 +1,8 @@
-export const API_URL =
-  process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000/api/v1";
+export const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
+
+console.log("this is the api key : ", API_URL);
+
 
 export class ApiRequestError extends Error {
   constructor(
@@ -71,3 +74,5 @@ export const patch = <T>(path: string, body: unknown, opts?: Options) =>
   request<T>(path, { ...opts, method: "PATCH", body });
 export const del = <T>(path: string, opts?: Options) =>
   request<T>(path, { ...opts, method: "DELETE" });
+
+
