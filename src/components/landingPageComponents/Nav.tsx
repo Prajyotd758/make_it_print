@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 
 // TODO: wire these to real cart / wishlist state
@@ -10,6 +11,8 @@ const wishlistCount = 0;
 export default function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+
+  const { status } = useSession();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -37,6 +40,7 @@ export default function Nav() {
           <Link href="/#work">Our Work</Link>
           <Link href="/products">Products</Link>
           <Link href="/#contact">Contact</Link>
+          {status === "authenticated" && <Link href="/profile">Profile {`${status}`}</Link>}
         </nav>
 
         <div className="nav__actions">

@@ -1,6 +1,6 @@
 "use client";
 
-import { useParams, useRouter, notFound } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import ProductDetailPage from "@/components/productPage/ProductDetailPage";
 
 export default function Page() {
@@ -13,6 +13,9 @@ export default function Page() {
       id={id}
       onBack={() => router.push("/products")}
       onOpenProduct={(p) => router.push(`/product/${p._id}`)}
+      onBuyNow={(productId, qty) =>
+        router.push(`/checkout?productId=${productId}&qty=${qty}`)
+      }
     />
   );
 }

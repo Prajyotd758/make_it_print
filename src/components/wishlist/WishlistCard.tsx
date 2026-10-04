@@ -112,14 +112,14 @@ export default function WishlistCard({
         <div className="wl-card-actions">
           <button
             type="button"
-            className="wl-card-btn cart"
+            className="wl-card-btn cart-w"
             disabled={carting}
             onClick={() => onAddToCart(p._id)}
           >
             <ShoppingCart size={15} />
             {carting ? "Adding…" : "Add to Cart"}
           </button>
-          <Link href={`/products/${p._id}`} className="wl-card-btn view">
+          <Link href={`/product/${p._id}`} className="wl-card-btn view">
             <Eye size={15} /> View
           </Link>
         </div>

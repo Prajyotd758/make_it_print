@@ -11,39 +11,77 @@ interface Tokens {
   expiresIn: number; // seconds
 }
 
-async function callAuth<T>(path: string, body: unknown): Promise<T | null> {
+interface LoginData extends Tokens {
+  user: { id: string; name: string | null; phone: string };
+}
+
+// expiry straight from the JWT, so we don't depend on the API returning expiresIn
+const expOf = (jwt: string): number => {
+  try {
+    const { exp } = JSON.parse(
+      Buffer.from(jwt.split(".")[1], "base64url").toString()
+    );
+    return exp * 1000;
+  } catch {
+    return Date.now() + 10 * 60 * 1000;
+  }
+};
+
+type AuthResult<T> = { ok: true; data: T } | { ok: false; status: number };
+
+async function callAuth<T>(
+  path: string,
+  body: unknown
+): Promise<AuthResult<T>> {
   try {
     const res = await fetch(`${API_URL}/auth/${path}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "x-internal-key":
-          process.env.INTERNAL_API_KEY ??
+          process.env.INTERNAL_API_KEY! ||
           "f6d33283c6313f8fca9ce8006f66f9aa9940dd1302ccdf789b3dbe3a959221270f1d363dd95c6441b5259defa7c80bd7",
       },
       body: JSON.stringify(body),
     });
     const json = await res.json().catch(() => null);
-    console.log("[auth]", path, res.status, JSON.stringify(json)); // temporary
-    return res.ok && json?.success ? (json.data as T) : null;
-  } catch (e) {
-    console.log("[auth] fetch failed", e); // temporary
-    return null;
+    if (res.ok && json?.success) return { ok: true, data: json.data as T };
+    return { ok: false, status: res.status };
+  } catch {
+    return { ok: false, status: 0 };
   }
 }
 
-async function refresh(token: JWT): Promise<JWT> {
-  const data = await callAuth<Tokens>("refresh", {
+async function doRefresh(token: JWT): Promise<JWT> {
+  const r = await callAuth<Tokens>("refresh", {
     refreshToken: token.refreshToken,
   });
-  if (!data) return { ...token, error: "RefreshFailed" };
-  return {
-    ...token,
-    accessToken: data.accessToken,
-    refreshToken: data.refreshToken ?? token.refreshToken,
-    accessExpires: expOf(data.accessToken),
-    error: undefined,
-  };
+
+  if (r.ok) {
+    return {
+      ...token,
+      accessToken: r.data.accessToken,
+      refreshToken: r.data.refreshToken ?? token.refreshToken,
+      accessExpires: expOf(r.data.accessToken),
+      error: undefined,
+    };
+  }
+  if (r.status === 0 || r.status >= 500) return token; // transient: retry next time
+  return { ...token, error: "RefreshFailed" }; // rejected: really expired
+}
+
+// one refresh per refresh token; late parallel callers reuse the result for 10s
+const inflight = new Map<string, Promise<JWT>>();
+function refresh(token: JWT): Promise<JWT> {
+  const key = token.refreshToken!;
+  let p = inflight.get(key);
+  if (!p) {
+    p = doRefresh(token).finally(() =>
+      setTimeout(() => inflight.delete(key), 10_000)
+    );
+    inflight.set(key, p);
+  }
+  return p;
 }
 
 export const authOptions: NextAuthOptions = {
@@ -55,13 +93,12 @@ export const authOptions: NextAuthOptions = {
       credentials: { name: {}, phone: {} },
       async authorize(creds) {
         if (!creds?.phone) return null;
-        const data = await callAuth<
-          Tokens & { user: { id: string; name: string | null; phone: string } }
-        >("login", {
+        const r = await callAuth<LoginData>("login", {
           phone: creds.phone,
           ...(creds.name?.trim() && { name: creds.name.trim() }),
         });
-        if (!data) return null;
+        if (!r.ok) return null;
+        const data = r.data;
         return {
           id: data.user.id,
           name: data.user.name,
@@ -81,8 +118,10 @@ export const authOptions: NextAuthOptions = {
           accessToken: user.accessToken,
           refreshToken: user.refreshToken,
           accessExpires: user.accessExpires,
+          error: undefined,
         };
       }
+      if (token.error) return token; // already failed, don't retry a dead token
       // refresh 30s before expiry
       if (Date.now() < (token.accessExpires ?? 0) - 30_000) return token;
       return refresh(token);
@@ -97,15 +136,3 @@ export const authOptions: NextAuthOptions = {
 
 const handler = NextAuth(authOptions);
 export { handler as GET, handler as POST };
-
-// expiry straight from the JWT, so we don't depend on the API returning expiresIn
-const expOf = (jwt: string): number => {
-  try {
-    const { exp } = JSON.parse(
-      Buffer.from(jwt.split(".")[1], "base64url").toString()
-    );
-    return exp * 1000;
-  } catch {
-    return Date.now() + 10 * 60 * 1000;
-  }
-};

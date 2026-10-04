@@ -207,11 +207,6 @@ export default function Hero() {
             </div>
 
             <div className="hero__block hero__block--b dots" />
-
-            {/* <div className="hero__block hero__block--c">
-            <span>CAD · v2.4</span>
-            <span>SN-27</span>
-          </div> */}
           </div>
         </div>
       </DriftingBackground>

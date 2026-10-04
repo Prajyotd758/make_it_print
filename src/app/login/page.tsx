@@ -99,8 +99,6 @@ export default function LoginPage() {
       redirect: false,
     });
 
-    console.log("res : ", res);
-
     if (res?.error) {
       setErrors({ form: "Could not sign you in. Please try again." });
       setLoading(false);
@@ -114,7 +112,6 @@ export default function LoginPage() {
       setErrors({ phone: "Enter a valid 10-digit mobile number" });
       return;
     }
-    console.log("submit phone called");
     setLoading(true);
     setErrors({});
     try {
@@ -134,8 +131,6 @@ export default function LoginPage() {
       setErrors({ name: "Please enter your name" });
       return;
     }
-    console.log("submit details called");
-
     setLoading(true);
     setErrors({});
     try {

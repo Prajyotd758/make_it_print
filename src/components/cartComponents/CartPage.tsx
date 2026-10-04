@@ -74,11 +74,10 @@ export default function CartPage({
   onOpenProduct = () => {},
 }: CartPageProps) {
   const { data: session, status } = useSession();
-  console.log("status in cart page : ", status);
+  const token = session?.accessToken;
 
   const router = useRouter();
   const pathname = usePathname();
-  const token = session?.accessToken;
 
   const [lines, setLines] = useState<CartLine[] | null>(null);
   const [error, setError] = useState<ApiRequestError | null>(null);

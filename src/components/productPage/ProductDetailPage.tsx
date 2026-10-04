@@ -24,7 +24,7 @@ interface ProductDetailPageProps {
   onBack?: () => void;
   onOpenProduct?: (product: Product) => void;
   onAddToCart?: (product: Product, selection: CartSelection) => void;
-  onBuyNow?: (product: Product, selection: CartSelection) => void;
+  onBuyNow?: (productId: string, qty: number) => void;
 }
 
 const priceLabel = (p: Product) =>
@@ -336,7 +336,7 @@ function Detail({
               <button
                 className="pd-btn pd-btn--pri"
                 disabled={!canBuy}
-                onClick={() => onBuyNow(p, selection)}
+                onClick={() => onBuyNow?.(p._id, qty)}
               >
                 {!p.inStock ? "Sold out" : priced ? "Buy now" : "Price soon"}
               </button>
