@@ -40,7 +40,7 @@ export default function Nav() {
           <Link href="/#work">Our Work</Link>
           <Link href="/products">Products</Link>
           <Link href="/#contact">Contact</Link>
-          {status === "authenticated" && <Link href="/profile">Profile {`${status}`}</Link>}
+          {status === "authenticated" && <Link href="/profile">Profile</Link>}
         </nav>
 
         <div className="nav__actions">
