@@ -20,7 +20,8 @@ export default function DriftingBackground({
     const rand = gsap.utils.random;
 
     const balls = (Array.from(el.children) as HTMLElement[]).map((n) => {
-      const r = rand(20, Math.min(180, h * 0.3));
+      const maxR = Math.min(180, w * 0.12, h * 0.3);
+      const r = rand(Math.min(20, maxR * 0.4), maxR);
       const a = rand(0, Math.PI * 2);
       const base = rand(30, 80); // px per second
       n.style.width = n.style.height = `${r * 2}px`;
