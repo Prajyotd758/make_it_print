@@ -1,158 +1,214 @@
 "use client";
 
-import { useMemo, useState, type ReactNode } from "react";
-import { PRODUCTS } from "@/components/productPage/data";
-import type { CartItem, Product } from "@/lib/types";
-import { categoryName, inr, thumbBg } from "../productPage/ui";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  type ReactNode,
+} from "react";
+import { useRouter, usePathname } from "next/navigation";
+import { categoryName, inr } from "../productPage/ui";
+import { ApiRequestError } from "@/lib/api/client";
+import { signOut, useSession } from "next-auth/react";
+import { useRef } from "react"; // add to the existing react import
+import {
+  MAX_QTY,
+  fetchCart,
+  removeFromCart,
+  setCartQty,
+  type CartLine,
+} from "@/lib/api/cart";
 import "./cart.css";
+import {
+  CartIcon,
+  TagIcon,
+  TrashIcon,
+  ClipboardIcon,
+  TruckIcon,
+  LockIcon,
+  ArrowIcon,
+  BackIcon,
+  ShieldIcon,
+  HeartIcon,
+} from "./cartIcons";
 
 const FREE_SHIPPING_AT = 999;
 const SHIPPING_FEE = 79;
 
-const DEMO_ITEMS: CartItem[] = PRODUCTS.slice(0, 3).map((product, i) => ({
-  product,
-  qty: i + 1,
-  material: product.materials[0],
-  size: product.sizes[1],
-  color: product.colors[i % product.colors.length].name,
-}));
+const toErr = (e: unknown) =>
+  e instanceof ApiRequestError
+    ? e
+    : new ApiRequestError(
+        (e as Error)?.message ?? "Something went wrong.",
+        0,
+        "UNKNOWN"
+      );
 
-const lineId = (i: CartItem) =>
-  `${i.product.id}-${i.material}-${i.size}-${i.color}`;
-
-/* ---------- icons (inline SVG, inherit currentColor) ---------- */
-const Svg = ({
-  children,
-  size = 20,
-}: {
-  children: ReactNode;
-  size?: number;
-}) => (
-  <svg
-    width={size}
-    height={size}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="1.8"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    aria-hidden="true"
-  >
-    {children}
-  </svg>
-);
-const CartIcon = () => (
-  <Svg size={34}>
-    <path d="M3 4h2.5l2.2 10.2a1 1 0 001 .8h8.6a1 1 0 001-.8L20 8H6.4" />
-    <circle cx="9.5" cy="19" r="1.2" />
-    <circle cx="17" cy="19" r="1.2" />
-  </Svg>
-);
-const TagIcon = () => (
-  <Svg size={20}>
-    <path d="M3 12.5V4h8.5L21 13.5 13.5 21 3 12.5z" />
-    <circle cx="7.5" cy="8.5" r="1.2" />
-  </Svg>
-);
-
-const TrashIcon = () => (
-  <Svg size={16}>
-    <path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6" />
-  </Svg>
-);
-const ClipboardIcon = () => (
-  <Svg size={30}>
-    <rect x="5" y="4" width="14" height="17" rx="2" />
-    <path d="M9 4h6v3H9zM8.500 11h7M8.500 15h7" />
-  </Svg>
-);
-const TruckIcon = ({ size = 40 }: { size?: number }) => (
-  <Svg size={size}>
-    <path d="M2 6h11v10H2zM13 9h4.500L21 12.500V16h-8" />
-    <circle cx="6.500" cy="17.500" r="1.800" />
-    <circle cx="17" cy="17.500" r="1.800" />
-  </Svg>
-);
-const LockIcon = () => (
-  <Svg size={18}>
-    <rect x="5" y="11" width="14" height="9" rx="2" />
-    <path d="M8 11V8a4 4 0 018 0v3" />
-  </Svg>
-);
-const ArrowIcon = () => (
-  <Svg size={16}>
-    <path d="M4 12h16M14 6l6 6-6 6" />
-  </Svg>
-);
-const BackIcon = () => (
-  <Svg size={16}>
-    <path d="M20 12H4M10 6l-6 6 6 6" />
-  </Svg>
-);
-const ShieldIcon = () => (
-  <Svg size={24}>
-    <path d="M12 3l7 3v5c0 4.500-3 8-7 10-4-2-7-5.500-7-10V6l7-3z" />
-    <path d="M9 12l2 2 4-4" />
-  </Svg>
-);
-const HeartIcon = () => (
-  <Svg size={24}>
-    <path d="M12 20.500s-7.500-4.600-9.200-9.400C1.700 7.900 3.600 4.800 6.800 4.800c2 0 3.500 1.100 5.200 3.100 1.700-2 3.200-3.100 5.200-3.100 3.200 0 5.100 3.100 4 6.300-1.700 4.800-9.200 9.400-9.200 9.400z" />
-  </Svg>
-);
+/* ---- keep the existing icon components here (Svg, CartIcon, TagIcon, TrashIcon, ... HeartIcon) ---- */
 
 interface CartPageProps {
-  initialItems?: CartItem[];
   onContinue?: () => void;
-  onCheckout?: (items: CartItem[]) => void;
-  onOpenProduct?: (product: Product) => void;
+  onCheckout?: (lines: CartLine[]) => void;
+  onOpenProduct?: (productId: string) => void;
 }
 
+/* ---------- non-cart states ---------- */
+const Shell = ({
+  title,
+  children,
+}: {
+  title: string;
+  children?: ReactNode;
+}) => (
+  <div className="cart cart--empty">
+    <span className="eyebrow">Your Cart</span>
+    <h1 className="cart-h1">{title}</h1>
+    {children}
+  </div>
+);
+
 export default function CartPage({
-  initialItems = DEMO_ITEMS,
   onContinue = () => {},
   onCheckout = () => {},
   onOpenProduct = () => {},
 }: CartPageProps) {
-  const [items, setItems] = useState<CartItem[]>(initialItems);
+  const { data: session, status } = useSession();
+  console.log("status in cart page : ", status);
 
-  const setQty = (id: string, qty: number) =>
-    setItems((prev) =>
-      prev.map((i) => (lineId(i) === id ? { ...i, qty: Math.max(1, qty) } : i))
+  const router = useRouter();
+  const pathname = usePathname();
+  const token = session?.accessToken;
+
+  const [lines, setLines] = useState<CartLine[] | null>(null);
+  const [error, setError] = useState<ApiRequestError | null>(null);
+  const [actionError, setActionError] = useState<string | null>(null);
+  const [busy, setBusy] = useState<Set<string>>(new Set());
+
+  const load = useCallback(
+    async (signal?: AbortSignal) => {
+      if (!token) return;
+      setError(null);
+      try {
+        setLines(await fetchCart(token, signal));
+      } catch (e) {
+        if ((e as Error)?.name === "AbortError") return;
+        setError(toErr(e));
+      }
+    },
+    [token]
+  );
+
+  useEffect(() => {
+    const ac = new AbortController();
+    load(ac.signal);
+    return () => ac.abort();
+  }, [load]);
+
+  const unauthorized =
+    status === "unauthenticated" || !!session?.error || error?.status === 401;
+
+  useEffect(() => {
+    if (unauthorized)
+      router.replace(`/login?callbackUrl=${encodeURIComponent(pathname)}`);
+  }, [unauthorized, router, pathname]);
+
+  // Optimistic update; the server response replaces it, a failure rolls it back.
+  const run = async (
+    id: string,
+    next: CartLine[],
+    call: (t: string) => Promise<CartLine[]>
+  ) => {
+    if (!token || !lines || busy.has(id)) return;
+    const prev = lines;
+    setActionError(null);
+    setLines(next);
+    setBusy((b) => new Set(b).add(id));
+    try {
+      setLines(await call(token));
+    } catch (e) {
+      setLines(prev);
+      setActionError(toErr(e).message);
+    } finally {
+      setBusy((b) => {
+        const n = new Set(b);
+        n.delete(id);
+        return n;
+      });
+    }
+  };
+
+  const setQty = (l: CartLine, qty: number) => {
+    const quantity = Math.min(MAX_QTY, Math.max(1, qty));
+    if (!lines || quantity === l.quantity) return;
+    const id = l.product._id;
+    run(
+      id,
+      lines.map((x) => (x.product._id === id ? { ...x, quantity } : x)),
+      (t) => setCartQty(t, id, quantity)
     );
-  const remove = (id: string) =>
-    setItems((prev) => prev.filter((i) => lineId(i) !== id));
+  };
+
+  const remove = (l: CartLine) => {
+    if (!lines) return;
+    const id = l.product._id;
+    run(
+      id,
+      lines.filter((x) => x.product._id !== id),
+      (t) => removeFromCart(t, id)
+    );
+  };
 
   const { units, subtotal, savings, shipping, total } = useMemo(() => {
-    const units = items.reduce((n, i) => n + i.qty, 0);
-    const subtotal = items.reduce((n, i) => n + i.product.price * i.qty, 0);
-    const savings = items.reduce(
-      (n, i) => n + (i.product.mrp - i.product.price) * i.qty,
+    const ls = lines ?? [];
+    const units = ls.reduce((n, l) => n + l.quantity, 0);
+    const subtotal = ls.reduce((n, l) => n + l.product.price * l.quantity, 0);
+    const savings = ls.reduce(
+      (n, l) =>
+        n +
+        Math.max(0, (l.product.mrp ?? l.product.price) - l.product.price) *
+          l.quantity,
       0
     );
     const shipping =
       subtotal === 0 || subtotal >= FREE_SHIPPING_AT ? 0 : SHIPPING_FEE;
     return { units, subtotal, savings, shipping, total: subtotal + shipping };
-  }, [items]);
+  }, [lines]);
 
   const progress = Math.min(100, (subtotal / FREE_SHIPPING_AT) * 100);
 
-  if (items.length === 0) {
+  // session still resolving, or redirecting to login: never flash an error
+  if (status === "loading" || unauthorized)
+    return <Shell title="Loading your cart…" />;
+
+  // real server / network failure
+  if (error)
     return (
-      <div className="cart cart--empty">
-        <span className="eyebrow">Your Cart</span>
-        <h1 className="cart-h1">Nothing here yet</h1>
+      <Shell title={error.message}>
+        <button
+          className="cart-checkout cart-checkout--auto"
+          onClick={() => load()}
+        >
+          Try again
+        </button>
+      </Shell>
+    );
+
+  // authenticated, request in flight
+  if (!lines) return <Shell title="Loading your cart…" />;
+
+  if (lines.length === 0)
+    return (
+      <Shell title="Nothing here yet">
         <button
           className="cart-checkout cart-checkout--auto"
           onClick={onContinue}
         >
           Browse products
         </button>
-      </div>
+      </Shell>
     );
-  }
-
+  /* ---------- cart ---------- */
   return (
     <div className="cart">
       <div className="cart-head">
@@ -175,6 +231,12 @@ export default function CartPage({
         </span>
       </div>
 
+      {actionError && (
+        <p className="cart-error" role="alert">
+          {actionError}
+        </p>
+      )}
+
       <div className="cart-layout">
         <section className="cart-panel">
           <div className="cart-cols">
@@ -183,41 +245,35 @@ export default function CartPage({
             <span>Total</span>
           </div>
 
-          {items.map((i) => {
-            const id = lineId(i);
-            const p = i.product;
-            const hex =
-              p.colors.find((c) => c.name === i.color)?.hex ?? "#1c1c1c";
+          {lines.map((l) => {
+            const p = l.product;
+            const pending = busy.has(p._id);
             return (
-              <article key={id} className="cart-item">
+              <article key={p._id} className="cart-item" aria-busy={pending}>
                 <button
                   className="cart-thumb"
-                  style={{ background: thumbBg(p.hue) }}
-                  onClick={() => onOpenProduct(p)}
+                  onClick={() => onOpenProduct(p._id)}
                   aria-label={p.title}
                 >
-                  {p.images && <img src={p.images[0]} alt={p.title} />}
+                  {p.images?.[0] && (
+                    <img src={p.images[0]} alt={p.title} loading="lazy" />
+                  )}
                 </button>
 
                 <div className="cart-info">
                   <span className="cart-pill">{categoryName(p.category)}</span>
                   <button
                     className="cart-name"
-                    onClick={() => onOpenProduct(p)}
+                    onClick={() => onOpenProduct(p._id)}
                   >
                     {p.title}
                   </button>
-                  <div className="cart-opts">
-                    <span>{i.material}</span>
-                    <span className="cart-sep">•</span>
-                    <span>{i.size}</span>
-                    <span className="cart-swatch">
-                      <i style={{ background: hex }} />
-                      {i.color}
-                    </span>
-                  </div>
                   <span className="cart-unit">{inr(p.price)} each</span>
-                  <button className="cart-remove" onClick={() => remove(id)}>
+                  <button
+                    className="cart-remove"
+                    disabled={pending}
+                    onClick={() => remove(l)}
+                  >
                     <TrashIcon /> Remove
                   </button>
                 </div>
@@ -225,20 +281,22 @@ export default function CartPage({
                 <div className="cart-qty">
                   <button
                     aria-label="Decrease"
-                    onClick={() => setQty(id, i.qty - 1)}
+                    disabled={pending || l.quantity <= 1}
+                    onClick={() => setQty(l, l.quantity - 1)}
                   >
                     −
                   </button>
-                  <span>{i.qty}</span>
+                  <span>{l.quantity}</span>
                   <button
                     aria-label="Increase"
-                    onClick={() => setQty(id, i.qty + 1)}
+                    disabled={pending || l.quantity >= MAX_QTY}
+                    onClick={() => setQty(l, l.quantity + 1)}
                   >
                     +
                   </button>
                 </div>
 
-                <div className="cart-line">{inr(p.price * i.qty)}</div>
+                <div className="cart-line">{inr(p.price * l.quantity)}</div>
               </article>
             );
           })}
@@ -271,10 +329,12 @@ export default function CartPage({
                 <span>Subtotal</span>
                 <span>{inr(subtotal)}</span>
               </div>
-              <div className="save">
-                <span>You save</span>
-                <span>- {inr(savings)}</span>
-              </div>
+              {savings > 0 && (
+                <div className="save">
+                  <span>You save</span>
+                  <span>- {inr(savings)}</span>
+                </div>
+              )}
               <div>
                 <span>Shipping</span>
                 <span>{shipping === 0 ? "Free" : inr(shipping)}</span>
@@ -287,7 +347,11 @@ export default function CartPage({
             </div>
             <p className="cart-tax">Inclusive of all taxes</p>
 
-            <button className="cart-checkout" onClick={() => onCheckout(items)}>
+            <button
+              className="cart-checkout"
+              disabled={busy.size > 0}
+              onClick={() => onCheckout(lines)}
+            >
               <LockIcon /> Checkout <ArrowIcon />
             </button>
 

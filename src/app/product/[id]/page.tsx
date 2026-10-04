@@ -2,20 +2,17 @@
 
 import { useParams, useRouter, notFound } from "next/navigation";
 import ProductDetailPage from "@/components/productPage/ProductDetailPage";
-import { PRODUCTS } from "@/components/productPage/data";
 
 export default function Page() {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
-  const product = PRODUCTS.find((p) => p.id === Number(id));
-  if (!product) notFound();
 
   return (
     <ProductDetailPage
       key={id}
-      product={product}
+      id={id}
       onBack={() => router.push("/products")}
-      onOpenProduct={(p) => router.push(`/product/${p.id}`)}
+      onOpenProduct={(p) => router.push(`/product/${p._id}`)}
     />
   );
 }

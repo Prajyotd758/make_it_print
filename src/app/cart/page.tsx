@@ -8,7 +8,7 @@ export default function Page() {
   return (
     <CartPage
       onContinue={() => router.push("/products")}
-      onOpenProduct={(p) => router.push(`/product/${p.id}`)}
+      onOpenProduct={(p) => router.push(`/product/${p._id}`)}
       onCheckout={() => router.push("/checkout")}
     />
   );

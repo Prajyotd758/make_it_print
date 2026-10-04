@@ -21,6 +21,23 @@
   cursor: pointer;
 }
 
+.cart-error {
+  margin: 0 0 12px;
+  padding: 10px 14px;
+  border: 1px solid rgba(18, 17, 16, 0.1);
+  border-left: 3px solid #f2a900;
+  background: #fff;
+  font-size: 13px;
+}
+.cart-item[aria-busy="true"] {
+  opacity: 0.6;
+  pointer-events: none;
+}
+.cart button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
 /* decorative corner blobs */
 .cart::before,
 .cart::after {

@@ -1,16 +1,13 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { PRODUCTS } from "./data";
 import type { Product } from "@/lib/types";
-import { Star, categoryName, discount, inr } from "./ui";
+import { getProductById, getRelatedProducts } from "@/lib/api/products";
+import { Star, categoryName, inr } from "./ui";
 import { CartIcon, HeartIcon } from "./icons";
 import "./product-detail.css";
 
-/**
- * Ratings, review counts and "sold" are generated placeholders in data.ts.
- * Keep this false until you have real numbers.
- */
+/** Flip to true once ratings/reviews/sold are real numbers. */
 const SHOW_SOCIAL_PROOF = false;
 const MAX_QTY = 10;
 
@@ -22,23 +19,20 @@ export interface CartSelection {
 }
 
 interface ProductDetailPageProps {
-  /** Pass the product clicked on the listing page. */
-  product?: Product;
-  /** Or resolve by slug (useful once you add real URLs). */
-  slug?: string;
+  /** Mongo _id from the route, e.g. /products/[id] */
+  id: string;
   onBack?: () => void;
   onOpenProduct?: (product: Product) => void;
   onAddToCart?: (product: Product, selection: CartSelection) => void;
   onBuyNow?: (product: Product, selection: CartSelection) => void;
 }
 
-const specValue = (p: Product, key: string) =>
-  p.specs.find(([label]) => label === key)?.[1];
-
 const priceLabel = (p: Product) =>
   p.price > 0 ? inr(p.price) : "Price on request";
 
-/* ---------- small inline icons (no dependency on ./icons) ---------- */
+const specEntries = (p: Product): [string, string][] =>
+  Object.entries(p.specs ?? {}).map(([k, v]) => [k, String(v)]);
+
 const Arrow = ({ dir }: { dir: "left" | "right" }) => (
   <svg
     width="18"
@@ -163,27 +157,32 @@ function Detail({
   onOpenProduct,
   onAddToCart,
   onBuyNow,
-}: Required<Omit<ProductDetailPageProps, "product" | "slug">> & {
-  p: Product;
-}) {
-  const [mat, setMat] = useState<string>(p.materials[0]);
-  const [size, setSize] = useState<string>(p.sizes[0]);
+}: Required<Omit<ProductDetailPageProps, "id">> & { p: Product }) {
+  const [mat, setMat] = useState<string>(p.materials?.[0] ?? "");
+  const [size, setSize] = useState<string>(p.sizes?.[0] ?? "");
   const [color, setColor] = useState<string>(p.colors?.[0]?.name ?? "");
   const [qty, setQty] = useState<number>(1);
   const [wished, setWished] = useState<boolean>(false);
+  const [related, setRelated] = useState<Product[]>([]);
 
   useEffect(() => {
     window.scrollTo({ top: 0 });
-  }, []);
+    const ctrl = new AbortController();
+    getRelatedProducts(p.category, p._id, ctrl.signal)
+      .then(setRelated)
+      .catch(() => {});
+    return () => ctrl.abort();
+  }, [p._id, p.category]);
 
   const priced = p.price > 0;
-  const showMrp = priced && p.mrp > p.price;
   const canBuy = p.inStock && priced;
   const selection: CartSelection = { material: mat, size, color, qty };
+  const specs = useMemo(() => specEntries(p), [p]);
 
   const facts = useMemo(() => {
+    const get = (key: string) => specs.find(([k]) => k === key)?.[1];
     const pick = (label: string, key: string) => {
-      const v = specValue(p, key);
+      const v = get(key);
       return v ? { label, value: v } : null;
     };
     const third =
@@ -195,22 +194,13 @@ function Detail({
       pick("Dispatch", "Dispatch"),
       third,
     ].filter(Boolean) as { label: string; value: string }[];
-  }, [p]);
-
-  const related = useMemo(() => {
-    const others = PRODUCTS.filter((x) => x.id !== p.id);
-    const same = others.filter((x) => x.category === p.category);
-    const rest = others.filter((x) => x.category !== p.category);
-    return [...same, ...rest].slice(0, 4);
-  }, [p]);
+  }, [specs]);
 
   return (
     <div className="pd">
       <div className="pd-wrap">
         <nav className="pd-crumb" aria-label="Breadcrumb">
           <button onClick={onBack}>Products</button>
-          <span>/</span>
-          <span>{categoryName(p.category)}</span>
           <span>/</span>
           <span className="cur">{p.title}</span>
         </nav>
@@ -236,12 +226,6 @@ function Detail({
                 <strong className={priced ? "" : "pd-soon"}>
                   {priceLabel(p)}
                 </strong>
-                {showMrp && (
-                  <>
-                    <s>{inr(p.mrp)}</s>
-                    <span className="pd-off">{discount(p)}% off</span>
-                  </>
-                )}
               </div>
               <p className="pd-tax">
                 {priced
@@ -265,37 +249,45 @@ function Detail({
               </dl>
             )}
 
-            <div className="pd-label">
-              Material <b>{mat}</b>
-            </div>
-            <div className="pd-opts">
-              {p.materials.map((m) => (
-                <button
-                  key={m}
-                  className={`pd-opt ${mat === m ? "on" : ""}`}
-                  aria-pressed={mat === m}
-                  onClick={() => setMat(m)}
-                >
-                  {m}
-                </button>
-              ))}
-            </div>
+            {p.materials?.length > 0 && (
+              <>
+                <div className="pd-label">
+                  Material <b>{mat}</b>
+                </div>
+                <div className="pd-opts">
+                  {p.materials.map((m) => (
+                    <button
+                      key={m}
+                      className={`pd-opt ${mat === m ? "on" : ""}`}
+                      aria-pressed={mat === m}
+                      onClick={() => setMat(m)}
+                    >
+                      {m}
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
 
-            <div className="pd-label">
-              Size <b>{size}</b>
-            </div>
-            <div className="pd-opts">
-              {p.sizes.map((s) => (
-                <button
-                  key={s}
-                  className={`pd-opt ${size === s ? "on" : ""}`}
-                  aria-pressed={size === s}
-                  onClick={() => setSize(s)}
-                >
-                  {s}
-                </button>
-              ))}
-            </div>
+            {p.sizes?.length > 0 && (
+              <>
+                <div className="pd-label">
+                  Size <b>{size}</b>
+                </div>
+                <div className="pd-opts">
+                  {p.sizes.map((s) => (
+                    <button
+                      key={s}
+                      className={`pd-opt ${size === s ? "on" : ""}`}
+                      aria-pressed={size === s}
+                      onClick={() => setSize(s)}
+                    >
+                      {s}
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
 
             {p.colors?.length > 0 && (
               <>
@@ -361,17 +353,19 @@ function Detail({
             <h2>Description</h2>
             <p>{p.description}</p>
           </section>
-          <section className="pd-card">
-            <h2>Specifications</h2>
-            <div className="pd-specs">
-              {p.specs.map(([k, v]) => (
-                <div key={k}>
-                  <span>{k}</span>
-                  <span>{v}</span>
-                </div>
-              ))}
-            </div>
-          </section>
+          {specs.length > 0 && (
+            <section className="pd-card">
+              <h2>Specifications</h2>
+              <div className="pd-specs">
+                {specs.map(([k, v]) => (
+                  <div key={k}>
+                    <span>{k}</span>
+                    <span>{v}</span>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
         </div>
 
         {related.length > 0 && (
@@ -380,12 +374,12 @@ function Detail({
             <div className="pd-grid">
               {related.map((r) => (
                 <button
-                  key={r.id}
+                  key={r._id}
                   className="pd-rel"
                   onClick={() => onOpenProduct(r)}
                 >
                   <span className="pd-relimg">
-                    <img src={r.images[0]} alt="" loading="lazy" />
+                    <img src={r.images?.[0]} alt="" loading="lazy" />
                   </span>
                   <span className="pd-kicker">{categoryName(r.category)}</span>
                   <h3>{r.title}</h3>
@@ -401,18 +395,57 @@ function Detail({
 }
 
 export default function ProductDetailPage({
-  product,
-  slug,
+  id,
   onBack = () => {},
   onOpenProduct = () => {},
   onAddToCart = () => {},
   onBuyNow = () => {},
 }: ProductDetailPageProps) {
-  const p = product ?? PRODUCTS.find((x) => x.slug === slug) ?? PRODUCTS[0];
-  // key resets selected material/size/colour/qty/gallery whenever the product changes
+  const [p, setP] = useState<Product | null>(null);
+  const [status, setStatus] = useState<
+    "loading" | "ready" | "notfound" | "error"
+  >("loading");
+
+  useEffect(() => {
+    const ctrl = new AbortController();
+    setStatus("loading");
+    getProductById(id, ctrl.signal)
+      .then((prod) => {
+        setP(prod);
+        setStatus("ready");
+      })
+      .catch((e) => {
+        if (e?.name === "AbortError") return;
+        setStatus(
+          e?.status === 404 || e?.status === 400 ? "notfound" : "error"
+        );
+      });
+    return () => ctrl.abort();
+  }, [id]);
+
+  if (status !== "ready" || !p) {
+    return (
+      <div className="pd">
+        <div className="pd-wrap">
+          <p className="pd-note">
+            {status === "loading" && "Loading product…"}
+            {status === "notfound" && "This product doesn't exist."}
+            {status === "error" && "Couldn't load this product. Please retry."}
+          </p>
+          {status !== "loading" && (
+            <button className="pd-btn pd-btn--ghost" onClick={onBack}>
+              Back to products
+            </button>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  // key resets material/size/colour/qty/gallery whenever the product changes
   return (
     <Detail
-      key={p.id}
+      key={p._id}
       p={p}
       onBack={onBack}
       onOpenProduct={onOpenProduct}

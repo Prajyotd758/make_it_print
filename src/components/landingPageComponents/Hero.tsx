@@ -2,6 +2,7 @@
 
 import { useLayoutEffect, useRef } from "react";
 import { gsap } from "@/lib/gsap";
+import DriftingBackground from "@/components/DriftingBackground";
 import { IconArrow, IconCheck } from "@/components/landingPageComponents/icons";
 
 export default function Hero() {
@@ -159,61 +160,61 @@ export default function Hero() {
 
   return (
     <section className="hero" id="top" ref={root}>
-      <div className="hero__glow" aria-hidden="true" />
-
-      <div className="wrap hero__wrap">
-        <div className="hero__copy">
-          <span className="eyebrow eyebrow--pill">
-            Precision 3D Studio · Chh. Sambhajinagar, India
-          </span>
-
-          <h1 className="hero__title">
-            <span className="testing">
-              From Blueprint to Physical Product
+      <DriftingBackground>
+        <div className="wrap hero__wrap">
+          <div className="hero__copy">
+            <span className="eyebrow eyebrow--pill">
+              Precision 3D Studio · Chh. Sambhajinagar, India
             </span>
-          </h1>
 
-          <p className="hero__sub">
-            We turn technical concepts and creative ideas into tangible reality
-            — through precision 3D printing, expert CAD drafting, and
-            fine-resolution miniature fabrication.
-          </p>
+            <h1 className="hero__title">
+              <span className="testing">
+                From Blueprint to Physical Product
+              </span>
+            </h1>
 
-          <div className="hero__ctas">
-            <a href="#services" className="btn btn--solid">
-              Explore Services <IconArrow />
-            </a>
-            <a href="#contact" className="btn btn--outline">
-              Request Custom Project <IconArrow />
-            </a>
+            <p className="hero__sub">
+              We turn technical concepts and creative ideas into tangible
+              reality — through precision 3D printing, expert CAD drafting, and
+              fine-resolution miniature fabrication.
+            </p>
+
+            <div className="hero__ctas">
+              <a href="#services" className="btn btn--solid">
+                Explore Services <IconArrow />
+              </a>
+              <a href="#contact" className="btn btn--outline">
+                Request Custom Project <IconArrow />
+              </a>
+            </div>
+
+            <div className="hero__badges">
+              <span>
+                <IconCheck /> GST Registered
+              </span>
+              <span>
+                <IconCheck /> UDYAM Certified
+              </span>
+              <span>
+                <IconCheck /> Global Shipping
+              </span>
+            </div>
           </div>
 
-          <div className="hero__badges">
-            <span>
-              <IconCheck /> GST Registered
-            </span>
-            <span>
-              <IconCheck /> UDYAM Certified
-            </span>
-            <span>
-              <IconCheck /> Global Shipping
-            </span>
-          </div>
-        </div>
+          <div className="hero__art" aria-hidden="true">
+            <div className="hero__block hero__block--a">
+              <img src="/printer3.jpeg" alt="" className="hero__block-img" />
+            </div>
 
-        <div className="hero__art" aria-hidden="true">
-          <div className="hero__block hero__block--a">
-            <img src="/printer3.jpeg" alt="" className="hero__block-img" />
-          </div>
+            <div className="hero__block hero__block--b dots" />
 
-          <div className="hero__block hero__block--b dots" />
-
-          {/* <div className="hero__block hero__block--c">
+            {/* <div className="hero__block hero__block--c">
             <span>CAD · v2.4</span>
             <span>SN-27</span>
           </div> */}
+          </div>
         </div>
-      </div>
+      </DriftingBackground>
     </section>
   );
 }

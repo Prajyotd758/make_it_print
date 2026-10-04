@@ -1,6 +1,8 @@
 import { Space_Grotesk, JetBrains_Mono } from "next/font/google";
 import Nav from "@/components/landingPageComponents/Nav";
 import "./globals.css";
+import Providers from "@/components/provider";
+import Notifications from "@/components/notification/Notifications";
 
 const display = Space_Grotesk({
   subsets: ["latin"],
@@ -30,8 +32,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <Nav />
-        {children}
+        <Providers>
+          <Nav />
+          {children}
+        </Providers>
+        <Notifications />
       </body>
     </html>
   );

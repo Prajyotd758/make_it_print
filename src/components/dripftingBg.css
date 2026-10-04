@@ -1,0 +1,37 @@
+.drift-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.drift-circle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 50%;
+  background: #ffd60a;
+  will-change: transform;
+}
+.drift-circle:nth-child(2n) {
+  background: #ffe14d;
+}
+.drift-circle:nth-child(3n) {
+  background: #ffc800;
+}
+.drift-circle:nth-child(4n) {
+  background: #fff08a;
+}
+.drift-circle:nth-child(7n) {
+  background: #fbc112;
+}
+
+.drift-bg[data-multi="true"] .drift-circle:nth-child(5n + 1) {
+  background: #ff7a59;
+}
+.drift-bg[data-multi="true"] .drift-circle:nth-child(5n + 2) {
+  background: #5eb8ff;
+}
+.drift-bg[data-multi="true"] .drift-circle:nth-child(5n + 3) {
+  background: #8bd48b;
+}

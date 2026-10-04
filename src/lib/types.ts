@@ -1,24 +1,33 @@
-export interface Category {
-  id: string;
+export interface ProductColor {
   name: string;
+  hex: string;
 }
 
 export interface Product {
-  id: number;
+  _id: string; // replaces `id: number`
   title: string;
   category: string;
   price: number;
-  mrp: number;
+  images: string[];
+  description: string;
+  materials: string[];
+  sizes: string[]; // use (string | number)[] if you store numbers
+  specs: Record<string, unknown>;
+  colors: ProductColor[];
+  hue: number;
+  sold: number;
   rating: number;
   reviews: number;
-  sold: number;
-  hue: number;
   inStock: boolean;
-  materials: string[];
-  colors: { name: string; hex: string }[];
-  sizes: string[];
-  description: string;
-  specs: [string, string][];
+}
+
+export interface Pagination {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+  hasNext: boolean;
+  hasPrev: boolean;
 }
 
 export type Seed = {
@@ -43,33 +52,6 @@ export interface Category {
   name: string;
 }
 
-export type ProductImages =
-  | [string]
-  | [string, string]
-  | [string, string, string]
-  | [string, string, string, string]
-  | [string, string, string, string, string]; // min 1, max 5, enforced by TS
-
-export interface Product {
-  id: number;
-  title: string;
-  category: string;
-  price: number;
-  mrp: number;
-  rating: number;
-  reviews: number;
-  sold: number;
-  hue: number;
-  inStock: boolean;
-  materials: string[];
-  colors: { name: string; hex: string }[];
-  sizes: string[];
-  description: string;
-  specs: [string, string][];
-  slug: string;
-  images: ProductImages;
-}
-
 export interface CartItem {
   product: Product;
   qty: number;
@@ -77,3 +59,10 @@ export interface CartItem {
   size: string;
   color: string;
 }
+
+export type ProductImages =
+  | [string]
+  | [string, string]
+  | [string, string, string]
+  | [string, string, string, string]
+  | [string, string, string, string, string]; // min 1, max 5, enforced by TS

@@ -40,23 +40,29 @@ export default function Nav() {
         </nav>
 
         <div className="nav__actions">
-          {/* <Link href="/wishlist" className="nav__icon" aria-label="Wishlist" onClick={closeMenu}> */}
-          <div>
-            <svg
-              width="30"
-              height="30"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.2"
-              strokeLinejoin="round"
-            >
-              <path d="M12 20.5s-7.5-4.6-9.2-9.4C1.7 7.900 3.600 4.800 6.800 4.800c2 0 3.500 1.100 5.200 3.100 1.700-2 3.200-3.100 5.200-3.100 3.200 0 5.100 3.100 4 6.300-1.700 4.800-9.200 9.400-9.200 9.400z" />
-            </svg>
-            {wishlistCount > 0 && (
-              <span className="nav__badge">{wishlistCount}</span>
-            )}
-          </div>
+          <Link
+            href="/wishlist"
+            className="nav__icon"
+            aria-label="Wishlist"
+            onClick={closeMenu}
+          >
+            <div>
+              <svg
+                width="30"
+                height="30"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.2"
+                strokeLinejoin="round"
+              >
+                <path d="M12 20.5s-7.5-4.6-9.2-9.4C1.7 7.900 3.600 4.800 6.800 4.800c2 0 3.500 1.100 5.200 3.100 1.700-2 3.200-3.100 5.200-3.100 3.200 0 5.100 3.100 4 6.300-1.700 4.800-9.200 9.400-9.200 9.400z" />
+              </svg>
+              {wishlistCount > 0 && (
+                <span className="nav__badge">{wishlistCount}</span>
+              )}
+            </div>
+          </Link>
 
           <Link
             href="/cart"
