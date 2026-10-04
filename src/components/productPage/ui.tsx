@@ -5,8 +5,8 @@ export const thumbBg = (h: number): string =>
   `linear-gradient(135deg,hsl(${42 + (h % 10)} 55% 94%),hsl(${44 + (h % 10)} 60% 85%))`;
 
 export const inr = (n: number): string => "₹" + n.toLocaleString("en-IN");
-export const discount = (p: Product): number => Math.round((1 - p.price / p.mrp) * 100);
-export const code = (p: Product): string => `MIP-${String(p.id).padStart(3, "0")}`;
+export const discount = (p: Product): number => Math.round((1 - p.price / 15) * 100);
+export const code = (p: Product): string => `MIP-${String(p._id).padStart(3, "0")}`;
 export const categoryName = (id: string): string => CATEGORIES.find((c) => c.id === id)?.name ?? "";
 
 export function Star() {

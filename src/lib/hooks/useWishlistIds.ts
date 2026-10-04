@@ -21,7 +21,7 @@ export function useWishlistIds() {
   const idsRef = useRef(ids);
   idsRef.current = ids;
   const inflight = useRef<Set<string>>(new Set());
-  const timer = useRef<ReturnType<typeof setTimeout>>();
+  const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   const notify = useCallback((msg: string) => {
     setNotice(msg);
