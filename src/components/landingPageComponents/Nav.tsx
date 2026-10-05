@@ -114,20 +114,23 @@ export default function Nav() {
         </div>
       </div>
 
-      <div className={`nav__mobile ${menuOpen ? "is-open" : ""}`}>
-        <Link href="/#services" onClick={closeMenu}>
-          Services
-        </Link>
-        <Link href="/#work" onClick={closeMenu}>
-          Our Work
-        </Link>
-        <Link href="/products" onClick={closeMenu}>
-          Products
-        </Link>
-        <Link href="/#contact" onClick={closeMenu}>
-          Contact
-        </Link>
-      </div>
+      {menuOpen && (
+        <div className={`nav__mobile is-open`}>
+          <Link href="/#services" onClick={closeMenu}>
+            Services
+          </Link>
+          <Link href="/#work" onClick={closeMenu}>
+            Our Work
+          </Link>
+          <Link href="/products" onClick={closeMenu}>
+            Products
+          </Link>
+          <Link href="/#contact" onClick={closeMenu}>
+            Contact
+          </Link>
+          {status === "authenticated" && <Link href="/profile">Profile</Link>}
+        </div>
+      )}
     </header>
   );
 }
