@@ -11,8 +11,8 @@ gsap.registerPlugin(ScrollTrigger);
 type Links = {
   instagram: string;
   linkedin: string;
-  facebook: string;
-  x: string;
+  facebook?: string;
+  x?: string;
 };
 type Founder = {
   name: string;
@@ -34,10 +34,15 @@ const FOUNDERS: Founder[] = [
     tags: ["Maker", "Engineer", "Builder"],
     bio: "I’m Prasad Shilge, Founder of Make It Print. With over 8 years of hands-on experience in 3D printing, mechanical design, electronics, and prototyping, I enjoy turning ideas into practical and innovative solutions.\n My focus is on using 3D printing to solve real-world problems and create functional, reliable, and customized products. From prototypes and custom parts to creative products, I aim to deliver quality solutions that bring ideas to life.",
     color: "#f2b27a",
-    image:
-      "/prasad.png",
+    image: "/prasad.png",
     dark: true,
-    links: { instagram: "#", linkedin: "#", facebook: "#", x: "#" }, // TODO
+    links: {
+      instagram: "https://www.instagram.com/prasadshilge?stkn=ZnB0NWxoeGJxZThh",
+      linkedin:
+        "https://www.linkedin.com/in/prasad-shilge?utm_source=share_via&utm_content=profile&utm_medium=member_android",
+      facebook: "https://www.facebook.com/share/1CpCaFUMQ7/",
+      // x: "#",
+    }, // TODO
   },
   {
     name: "Prajyot",
@@ -48,7 +53,11 @@ const FOUNDERS: Founder[] = [
     moreImage: "/meme.jpg",
     color: "#8fc1c9",
     image: "/prajyot.jpeg",
-    links: { instagram: "#", linkedin: "#", facebook: "#", x: "#" }, // TODO
+    links: {
+      instagram: "https://www.instagram.com/prajyot_dange_/",
+      linkedin:
+        "https://www.linkedin.com/in/prajyot-dange-1a28b423a?utm_source=share_via&utm_content=profile&utm_medium=member_android",
+    }, // TODO
   },
 ];
 

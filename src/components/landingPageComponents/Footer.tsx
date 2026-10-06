@@ -29,7 +29,7 @@ export default function Footer() {
           <div className="footer__col">
             <p className="footer__heading">Social</p>
             <a
-              href="https://instagram.com/"
+              href="https://www.instagram.com/makeitprint.in?stkn=MXBuOWpkNXVwZDZ6cw=="
               target="_blank"
               rel="noreferrer"
               className="footer__social"
