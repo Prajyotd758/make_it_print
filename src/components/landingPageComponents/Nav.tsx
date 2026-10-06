@@ -40,6 +40,7 @@ export default function Nav() {
           <Link href="/#work">Our Work</Link>
           <Link href="/products">Products</Link>
           <Link href="/#contact">Contact</Link>
+          <Link href="/about-us">About us</Link>
           {status === "authenticated" && <Link href="/profile">Profile</Link>}
         </nav>
 
@@ -127,6 +128,9 @@ export default function Nav() {
           </Link>
           <Link href="/#contact" onClick={closeMenu}>
             Contact
+          </Link>
+          <Link href="/about-us" onClick={closeMenu}>
+            About us
           </Link>
           {status === "authenticated" && <Link href="/profile">Profile</Link>}
         </div>

@@ -1,10 +1,9 @@
 "use client";
 
-import { Fragment, useEffect, useRef, type ReactNode } from "react";
-import Link from "next/link";
+import { useState, Fragment, useEffect, useRef, type ReactNode } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import DriftingBackground from "@/components/DriftingBackground"; // adjust to your component
+import DriftingBackground from "@/components/DriftingBackground";
 import "./about.css";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -18,9 +17,13 @@ type Links = {
 type Founder = {
   name: string;
   role: string;
+  tags: string[];
+  bio: string;
   color: string; // placeholder until real photo
   image?: string;
-  intro: string;
+  dark?: boolean;
+  knowMore?: boolean;
+  moreImage?: string;
   links: Links;
 };
 
@@ -28,19 +31,23 @@ const FOUNDERS: Founder[] = [
   {
     name: "Prasad",
     role: "Founder",
+    tags: ["Maker", "Engineer", "Builder"],
+    bio: "I’m Prasad Shilge, Founder of Make It Print. With over 8 years of hands-on experience in 3D printing, mechanical design, electronics, and prototyping, I enjoy turning ideas into practical and innovative solutions.\n My focus is on using 3D printing to solve real-world problems and create functional, reliable, and customized products. From prototypes and custom parts to creative products, I aim to deliver quality solutions that bring ideas to life.",
     color: "#f2b27a",
-    intro: "Hi, I’m the person behind Make It Print.",
     image:
-      "https://cdn.vanguardngr.com/wp-content/uploads/2024/11/elon-musk-fighter.jpg",
+      "/prasad.png",
+    dark: true,
     links: { instagram: "#", linkedin: "#", facebook: "#", x: "#" }, // TODO
   },
   {
-    name: "Elon Musk",
-    role: "Co-founder",
+    name: "Prajyot",
+    role: "CTO",
+    tags: ["Tech Visionary", "Innovator", "Builder"],
+    bio: "I build software😎.",
+    knowMore: true,
+    moreImage: "/meme.jpg",
     color: "#8fc1c9",
-    intro: "Placeholder. Replace with the second founder’s intro.",
-    image:
-      "https://cdn.vanguardngr.com/wp-content/uploads/2024/11/elon-musk-fighter.jpg",
+    image: "/prajyot.jpeg",
     links: { instagram: "#", linkedin: "#", facebook: "#", x: "#" }, // TODO
   },
 ];
@@ -67,16 +74,15 @@ const CHAPTERS = [
     p: "Today, I use my experience in **design, engineering, prototyping, and 3D printing** to solve real-world problems. For me, it’s not just about printing a part—it’s about **finding a practical way to make an idea possible**.",
   },
 ];
-
-const SKILLS = [
-  "CNC",
-  "3D Printing",
-  "Plotters",
-  "Mechanical",
-  "Electronics",
-  "Mechatronics",
-  "Prototyping",
-  "Design",
+const CHAPTERS1 = [
+  {
+    t: "The discovery",
+    p: "I met prasad for a project, then we started working together.",
+  },
+  {
+    t: "Today",
+    p: "Today, I maintain the online infrastructure of **Make It Print**.",
+  },
 ];
 
 const bold = (s: string): ReactNode =>
@@ -103,11 +109,66 @@ const Split = ({ text }: { text: string }) => (
   </>
 );
 
-const Ico = ({ children }: { children: ReactNode }) => (
+function KnowMore({ src, alt }: { src: string; alt: string }) {
+  const [open, setOpen] = useState(false);
+  const img = useRef<HTMLDivElement>(null);
+
+  const toggle = () => {
+    const next = !open;
+    setOpen(next);
+    if (next)
+      gsap.fromTo(
+        img.current,
+        {
+          opacity: 0,
+          y: 16,
+          scale: 0.94,
+          clipPath: "inset(0 0 100% 0 round 16px)",
+        },
+        {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          clipPath: "inset(0 0 0% 0 round 16px)",
+          duration: 0.7,
+          ease: "power3.out",
+        }
+      );
+    setTimeout(() => ScrollTrigger.refresh(), 600); // card height changed
+  };
+
+  return (
+    <>
+      <button
+        type="button"
+        className="ab-more"
+        onClick={toggle}
+        aria-expanded={open}
+      >
+        {open ? "Show less" : "Know more"} <span>→</span>
+      </button>
+      <div className={`ab-more-wrap ${open ? "open" : ""}`}>
+        <div>
+          <div className="ab-more-img" ref={img}>
+            <img src={src} alt={alt} />
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
+
+const Ico = ({
+  children,
+  size = 18,
+}: {
+  children: ReactNode;
+  size?: number;
+}) => (
   <svg
     viewBox="0 0 24 24"
-    width="18"
-    height="18"
+    width={size}
+    height={size}
     fill="none"
     stroke="currentColor"
     strokeWidth="1.8"
@@ -149,12 +210,46 @@ const LABEL: Record<keyof Links, string> = {
   x: "X",
 };
 
+const VALUES = [
+  {
+    t: "Bigger Dreams",
+    d: "We think long term.",
+    i: (
+      <Ico size={22}>
+        <path d="M5 19c0-3 1.5-4.5 3-5l7-7c2-2 5-2.5 5-2.5s-.5 3-2.5 5l-7 7c-.5 1.5-2 3-5.5 2.5z" />
+        <circle cx="15" cy="9" r="1.5" />
+      </Ico>
+    ),
+  },
+  {
+    t: "Smarter Solutions",
+    d: "We build with purpose.",
+    i: (
+      <Ico size={22}>
+        <path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z" />
+      </Ico>
+    ),
+  },
+  {
+    t: "A Brighter Future",
+    d: "We create for people.",
+    i: (
+      <Ico size={22}>
+        <circle cx="9" cy="8" r="3" />
+        <circle cx="17" cy="9" r="2.5" />
+        <path d="M3 19c0-3 2.5-5 6-5s6 2 6 5M16 14.5c2.5 0 5 1.5 5 4.5" />
+      </Ico>
+    ),
+  },
+];
+
 export default function AboutPage() {
   const root = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
       const $ = gsap.utils.toArray as <T extends Element>(s: string) => T[];
+      const wide = window.innerWidth > 860;
 
       /* hero */
       gsap
@@ -162,46 +257,46 @@ export default function AboutPage() {
         .from(".ab-hero .ab-eyebrow", { opacity: 0, x: -24, duration: 0.5 })
         .from(
           ".ab-hero .ch",
-          { yPercent: 120, rotate: 8, duration: 1, stagger: 0.025 },
+          { yPercent: 120, rotate: 8, duration: 1, stagger: 0.03 },
           "-=.2"
         )
         .from(".ab-hero p", { opacity: 0, y: 20, duration: 0.7 }, "-=.6")
         .from(
-          ".ab-marquee",
-          { opacity: 0, y: 40, scaleX: 0.9, duration: 0.9 },
-          "-=.5"
+          ".ab-note",
+          { opacity: 0, rotate: -8, y: 20, duration: 0.8 },
+          "-=.4"
+        )
+        .fromTo(
+          ".ab-arrow path",
+          { strokeDashoffset: 1 },
+          { strokeDashoffset: 0, duration: 0.9, ease: "power2.inOut" },
+          "-=.3"
         );
-
-      /* marquee */
-      gsap.to(".ab-track", {
-        xPercent: -50,
-        duration: 28,
-        ease: "none",
-        repeat: -1,
-      });
 
       /* founder cards */
       $<HTMLElement>(".ab-card").forEach((card, i) => {
         const q = gsap.utils.selector(card);
+        const rest = wide ? (i % 2 ? 2.5 : -3) : 0;
+        gsap.set(card, { rotation: rest });
         gsap.set(q(".ab-photo-in"), { autoAlpha: 0 });
         gsap
           .timeline({
-            scrollTrigger: { trigger: card, start: "top 82%" },
+            scrollTrigger: { trigger: card, start: "top 85%" },
             defaults: { ease: "power3.out" },
           })
           .from(card, {
-            y: 100,
+            y: 110,
             opacity: 0,
-            rotateX: -18,
+            rotation: rest + (i % 2 ? 6 : -6),
             transformPerspective: 900,
-            duration: 1,
-            delay: i * 0.12,
+            duration: 1.1,
+            delay: i * 0.15,
           })
           .fromTo(
             q(".ab-curtain"),
             { scaleX: 0, transformOrigin: "left center" },
             { scaleX: 1, duration: 0.5, ease: "power3.inOut" },
-            "-=.5"
+            "-=.6"
           )
           .set(q(".ab-photo-in"), { autoAlpha: 1 })
           .fromTo(
@@ -221,11 +316,6 @@ export default function AboutPage() {
             "<"
           )
           .from(
-            q(".ab-badge"),
-            { scale: 0, rotate: -60, duration: 0.7, ease: "back.out(2.4)" },
-            "-=.6"
-          )
-          .from(
             q(".ab-name .ch"),
             {
               yPercent: 120,
@@ -237,9 +327,9 @@ export default function AboutPage() {
             "-=.9"
           )
           .from(
-            q(".ab-role, .ab-intro"),
-            { opacity: 0, y: 18, duration: 0.5, stagger: 0.1 },
-            "-=.5"
+            q(".ab-role, .ab-tags, .ab-hr, .ab-intro"),
+            { opacity: 0, y: 18, duration: 0.5, stagger: 0.09 },
+            "-=.6"
           )
           .from(
             q(".ab-social a"),
@@ -247,7 +337,7 @@ export default function AboutPage() {
             "-=.3"
           );
 
-        /* 3D tilt + glare */
+        /* 3D tilt + glare, straighten on hover */
         const tilt = card.querySelector<HTMLElement>(".ab-tilt")!;
         const rx = gsap.quickTo(tilt, "rotationX", {
           duration: 0.4,
@@ -258,18 +348,22 @@ export default function AboutPage() {
           ease: "power3",
         });
         gsap.set(tilt, { transformPerspective: 900 });
+        card.addEventListener("pointerenter", () =>
+          gsap.to(card, { rotation: 0, duration: 0.5, ease: "power3.out" })
+        );
         card.addEventListener("pointermove", (e) => {
           const r = card.getBoundingClientRect();
           const x = (e.clientX - r.left) / r.width;
           const y = (e.clientY - r.top) / r.height;
-          ry((x - 0.5) * 14);
-          rx(-(y - 0.5) * 14);
+          ry((x - 0.5) * 10);
+          rx(-(y - 0.5) * 10);
           card.style.setProperty("--mx", `${x * 100}%`);
           card.style.setProperty("--my", `${y * 100}%`);
         });
         card.addEventListener("pointerleave", () => {
           rx(0);
           ry(0);
+          gsap.to(card, { rotation: rest, duration: 0.6, ease: "power3.out" });
         });
       });
 
@@ -288,32 +382,26 @@ export default function AboutPage() {
         );
       });
 
-      /* stats */
-      $<HTMLElement>(".ab-stat").forEach((s, i) => {
-        gsap.from(s, {
-          y: 60,
-          opacity: 0,
-          scale: 0.9,
-          duration: 0.8,
-          delay: i * 0.1,
-          ease: "back.out(1.6)",
-          scrollTrigger: { trigger: s, start: "top 88%" },
-        });
-        const n = s.querySelector<HTMLElement>("[data-count]");
-        if (n) {
-          const o = { v: 0 };
-          gsap.to(o, {
-            v: Number(n.dataset.count),
-            duration: 1.6,
-            ease: "power2.out",
-            snap: { v: 1 },
-            onUpdate: () => (n.textContent = String(o.v)),
-            scrollTrigger: { trigger: s, start: "top 88%" },
-          });
-        }
+      /* value strip */
+      gsap.from(".ab-value", {
+        y: 50,
+        opacity: 0,
+        scale: 0.94,
+        duration: 0.9,
+        ease: "power3.out",
+        scrollTrigger: { trigger: ".ab-value", start: "top 92%" },
+      });
+      gsap.from(".ab-value-item", {
+        y: 20,
+        opacity: 0,
+        duration: 0.6,
+        stagger: 0.12,
+        delay: 0.2,
+        ease: "power3.out",
+        scrollTrigger: { trigger: ".ab-value", start: "top 92%" },
       });
 
-      /* story timeline */
+      /* story timeline (unchanged) */
       gsap.fromTo(
         ".ab-line-fill",
         { scaleY: 0 },
@@ -345,14 +433,6 @@ export default function AboutPage() {
           scrollTrigger: { trigger: c, start: "top 85%" },
         });
       });
-      gsap.from(".ab-cta", {
-        y: 70,
-        opacity: 0,
-        scale: 0.94,
-        duration: 1,
-        ease: "power3.out",
-        scrollTrigger: { trigger: ".ab-cta", start: "top 90%" },
-      });
     }, root);
 
     const t = setTimeout(() => ScrollTrigger.refresh(), 400);
@@ -372,46 +452,62 @@ export default function AboutPage() {
         <header className="ab-hero">
           <span className="ab-eyebrow">About us</span>
           <h1>
-            <Split text="The people behind Make It Print" />
+            <Split text="Great minds." />
+            <br />
+            <Split text="A shared vision." />{" "}
           </h1>
           <p>
-            Makers, engineers and problem solvers turning ideas into real,
-            printable parts.
+            We’re a team of builders, dreamers and problem solvers, brought
+            together by a simple belief — technology should make life easier,
+            smarter and more human.
           </p>
+
+          <div className="ab-note" aria-hidden>
+            <span>
+              Different minds.
+              <br />
+              Same mission.
+            </span>
+            <svg className="ab-arrow" viewBox="0 0 60 70" fill="none">
+              <path
+                pathLength="1"
+                d="M48 4C50 28 36 48 12 62M12 62l4-16M12 62l16-5"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </div>
         </header>
       </main>
 
-      {/* <div className="ab-marquee" aria-hidden>
-        <div className="ab-track">
-          {[...SKILLS, ...SKILLS, ...SKILLS, ...SKILLS].map((s, i) => (
-            <span key={i}>
-              {s}
-              <i />
-            </span>
-          ))}
-        </div>
-      </div> */}
-
       <section className="ab-content">
         <div className="ab-cards">
-          {FOUNDERS.map((f, i) => (
-            <article key={f.name} className="ab-card">
+          {FOUNDERS.map((f) => (
+            <article key={f.name} className={`ab-card ${f.dark ? "dark" : ""}`}>
               <div className="ab-tilt">
                 <div className="ab-photo">
                   <div className="ab-photo-in" style={{ background: f.color }}>
                     {f.image && <img src={f.image} alt={f.name} />}
                   </div>
                   <span className="ab-curtain" />
-                  <span className="ab-badge">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
                 </div>
                 <div className="ab-body">
                   <span className="ab-role">{f.role}</span>
                   <h2 className="ab-name">
                     <Split text={f.name} />
                   </h2>
-                  <p className="ab-intro">{f.intro}</p>
+                  <div className="ab-tags">
+                    {f.tags.map((t) => (
+                      <span key={t}>{t}</span>
+                    ))}
+                  </div>
+                  <hr className="ab-hr" />
+                  <p className="ab-intro">{f.bio}</p>
+                  {f.knowMore && (f.moreImage ?? f.image) && (
+                    <KnowMore src={(f.moreImage ?? f.image)!} alt={f.name} />
+                  )}
                   <div className="ab-social">
                     {(Object.keys(f.links) as (keyof Links)[]).map((k) => (
                       <a
@@ -432,19 +528,16 @@ export default function AboutPage() {
           ))}
         </div>
 
-        <div className="ab-stats">
-          <div className="ab-stat">
-            <strong>8–9</strong>
-            <span>Years of making</span>
-          </div>
-          <div className="ab-stat">
-            <strong data-count="4">0</strong>
-            <span>Engineering fields</span>
-          </div>
-          <div className="ab-stat">
-            <strong>∞</strong>
-            <span>Ideas worth printing</span>
-          </div>
+        <div className="ab-value">
+          {VALUES.map((v) => (
+            <div key={v.t} className="ab-value-item">
+              <span className="ab-value-ico">{v.i}</span>
+              <div>
+                <strong>{v.t}</strong>
+                <span>{v.d}</span>
+              </div>
+            </div>
+          ))}
         </div>
 
         <div className="ab-story">
@@ -460,7 +553,19 @@ export default function AboutPage() {
             </div>
           ))}
         </div>
-
+        <div className="ab-story">
+          <h2 className="ab-story-title">Prajyot’s story</h2>
+          <div className="ab-line">
+            <i className="ab-line-fill" />
+          </div>
+          {CHAPTERS1.map((c, i) => (
+            <div key={c.t} className={`ab-chapter ${i % 2 ? "r" : ""}`}>
+              <span className="ab-num">{String(i + 1).padStart(2, "0")}</span>
+              <h3>{c.t}</h3>
+              <p>{bold(c.p)}</p>
+            </div>
+          ))}
+        </div>
       </section>
     </div>
   );
