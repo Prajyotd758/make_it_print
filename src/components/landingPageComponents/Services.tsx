@@ -3,7 +3,14 @@
 import { useEffect, useRef } from "react";
 import { gsap } from "@/lib/gsap";
 import { revealOnScroll } from "@/lib/scrollReveal";
-import { IconArrow, IconCube, IconDraft, IconGem, IconToy } from "@/components/landingPageComponents/icons";
+import Link from "next/link";
+import {
+  IconArrow,
+  IconCube,
+  IconDraft,
+  IconGem,
+  IconToy,
+} from "@/components/landingPageComponents/icons";
 
 const SERVICES = [
   {
@@ -51,7 +58,9 @@ export default function Services() {
         <div className="section__head">
           <div>
             <span className="eyebrow">Fabrication &amp; Design</span>
-            <h2 className="section__title">Everything you need to make it real</h2>
+            <h2 className="section__title">
+              Everything you need to make it real
+            </h2>
           </div>
           <p className="section__desc">
             Four core capabilities, one obsessive standard: precision. From
@@ -69,7 +78,20 @@ export default function Services() {
                     <Icon />
                   </span>
                   <span className="service-card__arrow">
-                    <IconArrow />
+                    {s.title === "3D Printing" ||
+                    s.title === "Engineering Drawings" ? (
+                      <Link
+                        href={`/service/${
+                          s.title === "3D Printing"
+                            ? "3d-printing"
+                            : "engineering-drawings"
+                        } `}
+                      >
+                        <IconArrow />
+                      </Link>
+                    ) : (
+                      <IconArrow />
+                    )}
                   </span>
                 </div>
                 <span className="service-card__index mono">

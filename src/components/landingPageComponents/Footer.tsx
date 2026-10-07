@@ -1,6 +1,19 @@
-import { IconInsta } from "@/components/landingPageComponents/icons";
+"use client";
 
-export default function Footer() {
+import { useState } from "react";
+import { IconInsta } from "@/components/landingPageComponents/icons";
+import PolicyModal from "../policyComponents/PolicyModal";
+import {
+  POLICIES,
+  type Policy,
+  type PolicyKey,
+} from "../policyComponents/policyData";
+
+const POLICY_ENTRIES = Object.entries(POLICIES) as [PolicyKey, Policy][];
+
+export default function Footer(): React.JSX.Element {
+  const [open, setOpen] = useState<PolicyKey | null>(null);
+
   return (
     <footer className="footer">
       <div className="wrap">
@@ -27,6 +40,15 @@ export default function Footer() {
           </div>
 
           <div className="footer__col">
+            <p className="footer__heading">Policies</p>
+            {POLICY_ENTRIES.map(([k, p]) => (
+              <button key={k} type="button" onClick={() => setOpen(k)}>
+                {p.label}
+              </button>
+            ))}
+          </div>
+
+          <div className="footer__col">
             <p className="footer__heading">Social</p>
             <a
               href="https://www.instagram.com/makeitprint.in?stkn=MXBuOWpkNXVwZDZ6cw=="
@@ -50,6 +72,10 @@ export default function Footer() {
           <span>Crafted in Chh. Sambhajinagar · Shipped all over india</span>
         </div>
       </div>
+
+      {open && (
+        <PolicyModal policy={POLICIES[open]} onClose={() => setOpen(null)} />
+      )}
     </footer>
   );
 }

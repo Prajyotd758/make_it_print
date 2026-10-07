@@ -1,0 +1,282 @@
+.sd {
+  --bg: #faf6ea;
+  --ink: #121110;
+  --y: #fbc112;
+  --y-deep: #f2a900;
+  --y-pale: #fde9a8;
+  --grey: #6c6a63;
+  --line: rgba(18, 17, 16, 0.1);
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: Inter, system-ui, sans-serif;
+  padding: 96px 0 48px;
+  line-height: 1.6;
+  overflow-x: clip;
+}
+.sd * {
+  box-sizing: border-box;
+}
+.sd-wrap {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+.sd-mono {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--grey);
+}
+
+/* split text */
+.sd-word {
+  display: inline-block;
+  white-space: nowrap;
+}
+.sd-mask {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  padding-bottom: 0.12em;
+}
+
+.ch {
+  display: inline-block;
+  will-change: transform;
+  opacity: 0;
+}
+
+/* tabs */
+.sd-tabs {
+  display: flex;
+  gap: 6px;
+  width: max-content;
+  max-width: 100%;
+  padding: 5px;
+  margin: 0 0 36px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  overflow-x: auto;
+  opacity: 0;
+}
+.sd-tabs a {
+  padding: 9px 18px;
+  border-radius: 999px;
+  color: var(--ink);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: background 0.2s, color 0.2s;
+}
+.sd-tabs a:hover {
+  background: var(--y-pale);
+}
+.sd-tabs a.on {
+  background: var(--ink);
+  color: var(--y);
+}
+
+/* hero */
+.sd-hero {
+  margin-bottom: 48px;
+}
+.sd-hero .sd-mono {
+  display: inline-block;
+  opacity: 0;
+}
+.sd-hero h1 {
+  font-size: clamp(36px, 6vw, 64px);
+  line-height: 1.04;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  margin: 10px 0 14px;
+}
+.sd-hero p {
+  color: var(--grey);
+  font-size: 18px;
+  max-width: 560px;
+  opacity: 0;
+  margin: 0;
+}
+
+/* cards */
+.sd-card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  padding: 36px;
+  margin-bottom: 20px;
+  box-shadow: 0 10px 30px rgba(60, 45, 0, 0.05);
+  opacity: 0;
+}
+.sd-card h2 {
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin: 6px 0 24px;
+}
+.sd-two {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+.sd-two .sd-card {
+  margin-bottom: 0;
+}
+
+/* points */
+.sd-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+.sd-two .sd-list {
+  grid-template-columns: 1fr;
+}
+.sd-point {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 20px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  overflow: hidden;
+  opacity: 0;
+  transition: translate 0.25s, box-shadow 0.25s, border-color 0.25s;
+}
+.sd-point::before {
+  /* yellow bar */
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--y);
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 0.3s;
+}
+.sd-point::after {
+  /* cursor glare */
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s;
+  background: radial-gradient(
+    220px circle at var(--mx, 50%) var(--my, 50%),
+    rgba(251, 193, 18, 0.28),
+    transparent 65%
+  );
+}
+.sd-point:hover {
+  translate: 0 -4px;
+  border-color: rgba(18, 17, 16, 0.2);
+  box-shadow: 0 14px 30px rgba(18, 17, 16, 0.1);
+}
+.sd-point:hover::before {
+  transform: scaleY(1);
+}
+.sd-point:hover::after {
+  opacity: 1;
+}
+
+.sd-badge {
+  position: relative;
+  z-index: 1;
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--y);
+  font: 700 12px "JetBrains Mono", monospace;
+  opacity: 0;
+  transition: background 0.25s, color 0.25s;
+}
+.sd-point:hover .sd-badge {
+  background: var(--ink);
+  color: var(--y);
+}
+.sd-txt {
+  position: relative;
+  z-index: 1;
+  font-size: 15px;
+  line-height: 1.5;
+  color: #2a2a26;
+  opacity: 0;
+}
+.sd-curtain {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: var(--ink);
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+/* cta */
+.sd-cta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+  margin-top: 40px;
+  padding: 44px;
+  border-radius: 28px;
+  background: var(--ink);
+  color: #fff;
+  opacity: 0;
+}
+.sd-cta h3 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+.sd-cta p {
+  margin: 4px 0 0;
+  color: #bdbab0;
+}
+.sd-btn {
+  padding: 14px 28px;
+  border-radius: 999px;
+  background: var(--y);
+  color: var(--ink);
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.sd-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(251, 193, 18, 0.45);
+}
+.sd-btn:active {
+  transform: none;
+}
+
+@media (max-width: 800px) {
+  .sd-list,
+  .sd-two {
+    grid-template-columns: 1fr;
+  }
+  .sd-card {
+    padding: 24px;
+  }
+  .sd-cta {
+    padding: 28px;
+  }
+}
