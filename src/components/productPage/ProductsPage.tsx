@@ -122,9 +122,11 @@ function Card({
 
         <div className="pl-price">{inr(p.price)}</div>
 
-        <div className="pl-rate">
-          <Star /> {p.rating} <em>({p.reviews})</em>
-        </div>
+        {p.rating > 0 && (
+          <div className="pl-rate">
+            <Star /> {p.rating} <em>({p.reviews})</em>
+          </div>
+        )}
 
         <button
           className="pl-add"
