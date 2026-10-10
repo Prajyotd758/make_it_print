@@ -133,6 +133,7 @@ export default function Nav() {
           <Link href="/about-us" onClick={closeMenu}>
             About us
           </Link>
+          <Link href="/customize">Custom Keychains</Link>
           {status === "authenticated" && <Link href="/profile">Profile</Link>}
         </div>
       )}
