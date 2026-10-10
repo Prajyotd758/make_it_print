@@ -552,8 +552,10 @@ export default function ProfilePage() {
   }
 
   async function logout() {
-    // call your existing auth logout + clear token store here
+    // clear any client stores here (cart, etc.) if needed
+    await signOut({ redirect: false }); // clears the session cookie
     router.replace("/login");
+    router.refresh(); // drops cached server-component data from the old session
   }
 
   const since = data

@@ -32,8 +32,6 @@ async function callAuth<T>(
   path: string,
   body: unknown
 ): Promise<AuthResult<T>> {
-  console.log("process.env.INTERNAL_API_KEY : ",process.env.INTERNAL_API_KEY);
-  
   try {
     const res = await fetch(`${API_URL}/auth/${path}`, {
       method: "POST",
@@ -129,6 +127,13 @@ export const authOptions: NextAuthOptions = {
       session.accessToken = token.error ? undefined : token.accessToken;
       session.error = token.error;
       return session;
+    },
+  },
+  events: {
+    async signOut({ token }) {
+      if (token?.refreshToken) {
+        await callAuth("logout", { refreshToken: token.refreshToken });
+      }
     },
   },
 };

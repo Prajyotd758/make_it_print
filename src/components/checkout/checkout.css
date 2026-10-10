@@ -290,6 +290,18 @@
   text-align: center;
   margin: 12px 0 0;
 }
+
+.co-swatch {
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  background: #1a1a1a;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  font-size: 18px;
+}
+
 @media (max-width: 900px) {
   .co {
     padding: 96px 16px 48px;

@@ -41,6 +41,7 @@ export default function Nav() {
           <Link href="/products">Products</Link>
           <Link href="/#contact">Contact</Link>
           <Link href="/about-us">About us</Link>
+          <Link href="/customize">Custom Keychains</Link>
           {status === "authenticated" && <Link href="/profile">Profile</Link>}
         </nav>
 

@@ -15,6 +15,11 @@ import {
   verifyPayment,
 } from "@/lib/api/checkout";
 import "@/components/checkout/checkout.css";
+import {
+  KEYCHAIN_PRICE,
+  KEYCHAIN_FREE_SHIPPING_AT,
+  parseKeychain,
+} from "@/lib/keychain";
 
 declare global {
   interface Window {
@@ -57,6 +62,7 @@ function CheckoutInner() {
 
   const buyNowId = sp.get("productId");
   const buyNowQty = Math.min(MAX_QTY, Math.max(1, Number(sp.get("qty")) || 1));
+  const custom = useMemo(() => parseKeychain(sp), [sp]);
 
   const [items, setItems] = useState<CartLine[]>([]);
   const [addresses, setAddresses] = useState<Address[]>([]);
@@ -80,7 +86,9 @@ function CheckoutInner() {
     if (!token) return;
     const ac = new AbortController();
     const getLines = async (): Promise<CartLine[]> =>
-      buyNowId
+      custom
+        ? []
+        : buyNowId
         ? [
             {
               product: await getProductById(buyNowId),
@@ -90,7 +98,7 @@ function CheckoutInner() {
         : fetchCart(token, ac.signal);
     Promise.all([getLines(), getAddresses(token)])
       .then(([lines, a]) => {
-        if (!lines.length) return router.replace("/cart");
+        if (!custom && !lines.length) return router.replace("/cart");
         setItems(lines);
         setAddresses(a);
         if (a.length) {
@@ -105,18 +113,19 @@ function CheckoutInner() {
         setLoading(false);
       });
     return () => ac.abort();
-  }, [token, router, buyNowId, buyNowQty]);
+  }, [token, router, buyNowId, buyNowQty, custom]);
 
   const { units, subtotal, shipping, total } = useMemo(() => {
-    const units = items.reduce((n, l) => n + l.quantity, 0);
-    const subtotal = items.reduce(
-      (n, l) => n + l.product.price * l.quantity,
-      0
-    );
-    const shipping =
-      subtotal === 0 || subtotal >= FREE_SHIPPING_AT ? 0 : SHIPPING_FEE;
+    const units = custom
+      ? custom.quantity
+      : items.reduce((n, l) => n + l.quantity, 0);
+    const subtotal = custom
+      ? KEYCHAIN_PRICE * custom.quantity
+      : items.reduce((n, l) => n + l.product.price * l.quantity, 0);
+    const freeAt = custom ? KEYCHAIN_FREE_SHIPPING_AT : FREE_SHIPPING_AT;
+    const shipping = subtotal === 0 || subtotal >= freeAt ? 0 : SHIPPING_FEE;
     return { units, subtotal, shipping, total: subtotal + shipping };
-  }, [items]);
+  }, [items, custom]);
 
   const set = (k: keyof Address) => (e: React.ChangeEvent<HTMLInputElement>) =>
     setForm({ ...form, [k]: e.target.value });
@@ -157,6 +166,7 @@ function CheckoutInner() {
         ...(buyNowId && {
           buyNow: { productId: buyNowId, quantity: buyNowQty },
         }),
+        ...(custom && { custom: { type: "keychain" as const, ...custom } }),
       });
       const rzp = new window.Razorpay({
         key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID, // TODO: add key
@@ -334,22 +344,40 @@ function CheckoutInner() {
               </span>
             </div>
 
-            {loading ? (
-              <p className="co-muted">Loading…</p>
-            ) : (
-              items.map((i) => (
-                <div className="co-item" key={i.product._id}>
-                  {i.product.images?.[0] && (
-                    <img src={i.product.images[0]} alt={i.product.title} />
-                  )}
-                  <div>
-                    <p className="co-item-title">{i.product.title}</p>
-                    <span className="co-mono">Qty {i.quantity}</span>
-                  </div>
-                  <strong>{inr(i.product.price * i.quantity)}</strong>
+            {custom && (
+              <div className="co-item">
+                <div className="co-swatch" style={{ color: custom.color }}>
+                  Aa
                 </div>
-              ))
+                <div>
+                  <p className="co-item-title">
+                    Custom keychain · {custom.name}
+                  </p>
+                  <span className="co-mono">
+                    {custom.font} · Qty {custom.quantity}
+                  </span>
+                </div>
+                <strong>{inr(KEYCHAIN_PRICE * custom.quantity)}</strong>
+              </div>
             )}
+
+            {!custom &&
+              (loading ? (
+                <p className="co-muted">Loading…</p>
+              ) : (
+                items.map((i) => (
+                  <div className="co-item" key={i.product._id}>
+                    {i.product.images?.[0] && (
+                      <img src={i.product.images[0]} alt={i.product.title} />
+                    )}
+                    <div>
+                      <p className="co-item-title">{i.product.title}</p>
+                      <span className="co-mono">Qty {i.quantity}</span>
+                    </div>
+                    <strong>{inr(i.product.price * i.quantity)}</strong>
+                  </div>
+                ))
+              ))}
 
             <div className="co-row">
               <span>Subtotal</span>
@@ -373,7 +401,7 @@ function CheckoutInner() {
 
             <button
               className="co-btn yellow"
-              disabled={paying || loading || !items.length}
+              disabled={paying || loading || (!items.length && !custom)}
               onClick={pay}
             >
               {paying ? "Processing…" : `Pay now · ${inr(total)}`}
