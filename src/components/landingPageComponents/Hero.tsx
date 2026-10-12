@@ -164,7 +164,7 @@ export default function Hero() {
         <div className="wrap hero__wrap">
           <div className="hero__copy">
             <span className="eyebrow eyebrow--pill">
-              Precision 3D Studio · Chh. Sambhajinagar, India
+              Make it print 3D Studio · Chh. Sambhajinagar, India
             </span>
 
             <h1 className="hero__title">
@@ -175,7 +175,7 @@ export default function Hero() {
 
             <p className="hero__sub">
               We turn technical concepts and creative ideas into tangible
-              reality — through precision 3D printing, expert CAD drafting, and
+              reality — through 3D printing, expert CAD drafting, and
               fine-resolution miniature fabrication.
             </p>
 

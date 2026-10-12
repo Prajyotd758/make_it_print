@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 
@@ -11,8 +11,19 @@ const wishlistCount = 0;
 export default function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const { data: session, status } = useSession();
+  const [profileOpen, setProfileOpen] = useState(false);
+  const profileRef = useRef<HTMLDivElement>(null);
+  const initial = session?.user?.name?.[0]?.toUpperCase() ?? "U";
 
-  const { status } = useSession();
+  useEffect(() => {
+    const onDown = (e: MouseEvent) => {
+      if (profileRef.current && !profileRef.current.contains(e.target as Node))
+        setProfileOpen(false);
+    };
+    document.addEventListener("mousedown", onDown);
+    return () => document.removeEventListener("mousedown", onDown);
+  }, []);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -39,10 +50,9 @@ export default function Nav() {
           <Link href="/#services">Services</Link>
           <Link href="/#work">Our Work</Link>
           <Link href="/products">Products</Link>
+          <Link href="/customize">Custom Keychains</Link>
           <Link href="/#contact">Contact</Link>
           <Link href="/about-us">About us</Link>
-          <Link href="/customize">Custom Keychains</Link>
-          {status === "authenticated" && <Link href="/profile">Profile</Link>}
         </nav>
 
         <div className="nav__actions">
@@ -92,6 +102,42 @@ export default function Nav() {
             {cartCount > 0 && <span className="nav__badge">{cartCount}</span>}
           </Link>
 
+          {status === "authenticated" ? (
+            <div className="nav__profile" ref={profileRef}>
+              <Link href="/profile" className="nav__icon" aria-label="Sign in">
+                <svg
+                  width="30"
+                  height="30"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <circle cx="12" cy="8" r="4" />
+                  <path d="M4 20.5c1-4 4.2-6 8-6s7 2 8 6" />
+                </svg>
+              </Link>
+            </div>
+          ) : (
+            <Link href="/login" className="nav__icon" aria-label="Sign in">
+              <svg
+                width="30"
+                height="30"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <circle cx="12" cy="8" r="4" />
+                <path d="M4 20.5c1-4 4.2-6 8-6s7 2 8 6" />
+              </svg>
+            </Link>
+          )}
+
           <button
             className="nav__menu-btn"
             aria-label={menuOpen ? "Close menu" : "Open menu"}
@@ -127,14 +173,15 @@ export default function Nav() {
           <Link href="/products" onClick={closeMenu}>
             Products
           </Link>
+          <Link href="/customize" onClick={closeMenu}>
+            Custom Keychains
+          </Link>
           <Link href="/#contact" onClick={closeMenu}>
             Contact
           </Link>
           <Link href="/about-us" onClick={closeMenu}>
             About us
           </Link>
-          <Link href="/customize">Custom Keychains</Link>
-          {status === "authenticated" && <Link href="/profile">Profile</Link>}
         </div>
       )}
     </header>

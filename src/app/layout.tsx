@@ -19,9 +19,9 @@ const mono = JetBrains_Mono({
 });
 
 export const metadata = {
-  title: "Make It Print — Precision 3D Art",
+  title: "Make It Print — 3D Art",
   description:
-    "Custom models and toys for makers. Precision 3D printing, engineering drawings, miniature fabrication and custom toys from Make It Print.",
+    "Custom models and toys for makers. 3D printing, engineering drawings, miniature fabrication and custom toys from Make It Print.",
 };
 
 export default function RootLayout({
