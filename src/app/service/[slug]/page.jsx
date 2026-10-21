@@ -9,7 +9,7 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }) {
   const { slug } = await params;
   const s = SERVICES[slug];
-  return { title: s ? `${s.title} — Make It Print` : "Services" };
+  return { title: s ? `${s.title} • Make It Print` : "Services" };
 }
 
 export default async function Page({ params }) {

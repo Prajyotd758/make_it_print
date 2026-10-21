@@ -1,4 +1,4 @@
-/* Product LISTING page — prefix .pl-  (detail page lives in product-detail.css) */
+/* Product LISTING page • prefix .pl-  (detail page lives in product-detail.css) */
 .pl {
   --g: clamp(16px, 5vw, 84px);
   position: relative;

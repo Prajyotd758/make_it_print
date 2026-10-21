@@ -249,7 +249,7 @@ function Detail({
               </dl>
             )}
 
-            {p.materials?.length > 0 && (
+            {/* {p.materials?.length > 0 && (
               <>
                 <div className="pd-label">
                   Material <b>{mat}</b>
@@ -267,9 +267,9 @@ function Detail({
                   ))}
                 </div>
               </>
-            )}
+            )} */}
 
-            {p.sizes?.length > 0 && (
+            {/* {p.sizes?.length > 0 && (
               <>
                 <div className="pd-label">
                   Size <b>{size}</b>
@@ -287,7 +287,7 @@ function Detail({
                   ))}
                 </div>
               </>
-            )}
+            )} */}
 
             {p.colors?.length > 0 && (
               <>
@@ -342,9 +342,9 @@ function Detail({
               </button>
             </div>
 
-            <p className="pd-note">
+            {/* <p className="pd-note">
               Printed to order in-house at Make It Print.
-            </p>
+            </p> */}
           </div>
         </div>
 
@@ -353,7 +353,7 @@ function Detail({
             <h2>Description</h2>
             <p>{p.description}</p>
           </section>
-          {specs.length > 0 && (
+          {/* {specs.length > 0 && (
             <section className="pd-card">
               <h2>Specifications</h2>
               <div className="pd-specs">
@@ -365,7 +365,7 @@ function Detail({
                 ))}
               </div>
             </section>
-          )}
+          )} */}
         </div>
 
         {related.length > 0 && (

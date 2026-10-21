@@ -72,7 +72,7 @@ const CHAPTERS = [
   },
   {
     t: "The problem",
-    p: "While working on these projects, I often faced one common problem—**the part I needed simply wasn’t available in the market**. Getting custom parts machined could be expensive and time-consuming, especially for small quantities.",
+    p: "While working on these projects, I often faced one common problem•**the part I needed simply wasn’t available in the market**. Getting custom parts machined could be expensive and time-consuming, especially for small quantities.",
   },
   {
     t: "The discovery",
@@ -80,7 +80,7 @@ const CHAPTERS = [
   },
   {
     t: "Today",
-    p: "Today, I use my experience in **design, engineering, prototyping, and 3D printing** to solve real-world problems. For me, it’s not just about printing a part—it’s about **finding a practical way to make an idea possible**.",
+    p: "Today, I use my experience in **design, engineering, prototyping, and 3D printing** to solve real-world problems. For me, it’s not just about printing a part•it’s about **finding a practical way to make an idea possible**.",
   },
 ];
 const CHAPTERS1 = [
@@ -467,7 +467,7 @@ export default function AboutPage() {
           </h1>
           <p>
             We’re a team of builders, dreamers and problem solvers, brought
-            together by a simple belief — technology should make life easier,
+            together by a simple belief • technology should make life easier,
             smarter and more human.
           </p>
 

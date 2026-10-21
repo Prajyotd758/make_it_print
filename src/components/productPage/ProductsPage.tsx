@@ -459,7 +459,6 @@ export default function ProductsPage({
               >
                 <GridIcon />
                 <span>All</span>
-                <small>{counts.total}</small>
               </button>
 
               {CATEGORIES.map((c) => (
@@ -471,8 +470,6 @@ export default function ProductsPage({
                   {CATEGORY_ICONS[c.id]}
 
                   <span>{c.name}</span>
-
-                  <small>{counts.byId[c.id] ?? 0}</small>
                 </button>
               ))}
             </div>

@@ -175,7 +175,7 @@ export default function Hero() {
 
             <p className="hero__sub">
               We turn technical concepts and creative ideas into tangible
-              reality — through 3D printing, expert CAD drafting, and
+              reality • through 3D printing, expert CAD drafting, and
               fine-resolution miniature fabrication.
             </p>
 

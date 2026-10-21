@@ -203,7 +203,7 @@ export default function LoginPage() {
               <span className="auth-underline">Make It Print</span>
             </h1>
             <p className="auth-lead">
-              Access your orders, manage custom projects, view quotes and more —
+              Access your orders, manage custom projects, view quotes and more •
               all in one place.
             </p>
 

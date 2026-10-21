@@ -4,12 +4,14 @@ import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import * as ClipperLib from "clipper-lib";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import { STLExporter } from "three/examples/jsm/exporters/STLExporter.js";
 import * as opentype from "opentype.js";
 
 interface Props {
   text: string;
   color: string;
   fontFile: string;
+  exportRef?: React.MutableRefObject<(() => void) | null>;
 }
 
 interface Api {
@@ -120,11 +122,14 @@ function disposeGroup(g: THREE.Group): void {
   g.clear();
 }
 
-export default function KeychainCanvas({ text, color, fontFile }: Props) {
+export default function KeychainCanvas({
+  text,
+  color,
+  fontFile,
+  exportRef,
+}: Props) {
   const mountRef = useRef<HTMLDivElement>(null);
   const apiRef = useRef<Api | null>(null);
-
-  
 
   useEffect(() => {
     const mount = mountRef.current;
@@ -179,6 +184,9 @@ export default function KeychainCanvas({ text, color, fontFile }: Props) {
     let font: opentype.Font | null = null;
     let current = "Name";
     let fontReq = 0;
+
+    let bodyMeshes: THREE.Mesh[] = [];
+    let bodyScale = 1;
 
     const layer = (
       shapes: THREE.Shape[],
@@ -248,12 +256,15 @@ export default function KeychainCanvas({ text, color, fontFile }: Props) {
 
       const top = layer(shapes, 0.4, 0.3, mText);
       top.geometry.translate(dx, dy, 0);
-      group.add(layer(blackShapes, 0, 0.4, mBlack), top);
+      const base = layer(blackShapes, 0, 0.4, mBlack);
+      group.add(base, top);
+      bodyMeshes = [base, top];
 
       // dimensions (height fixed, width derived from proportions)
       const body = new THREE.Box3().setFromObject(group);
       const bs = body.getSize(new THREE.Vector3());
       const wMm = Math.round((bs.x / bs.y) * HEIGHT_MM);
+      bodyScale = HEIGHT_MM / bs.y;
       const zz = 0.2;
       const yLine = body.min.y - 0.7;
       const xLine = body.max.x + 0.7;
@@ -364,6 +375,31 @@ export default function KeychainCanvas({ text, color, fontFile }: Props) {
       },
     };
 
+    if (exportRef) {
+      exportRef.current = () => {
+        if (!bodyMeshes.length) return;
+        const out = new THREE.Group();
+        bodyMeshes.forEach((m) => {
+          const copy = new THREE.Mesh(m.geometry, m.material);
+          copy.position.copy(m.position);
+          out.add(copy);
+        });
+        out.scale.setScalar(bodyScale);
+        out.updateMatrixWorld(true);
+        const data = new STLExporter().parse(out, { binary: true });
+        const url = URL.createObjectURL(
+          new Blob([data], { type: "model/stl" })
+        );
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `keychain-${current.replace(/[^a-z0-9]+/gi, "_")}.stl`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+      };
+    }
+
     return () => {
       cancelAnimationFrame(raf);
       ro.disconnect();
@@ -375,6 +411,7 @@ export default function KeychainCanvas({ text, color, fontFile }: Props) {
       wLabel.remove();
       hLabel.remove();
       apiRef.current = null;
+      if (exportRef) exportRef.current = null;
     };
   }, []);
 

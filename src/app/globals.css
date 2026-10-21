@@ -1,5 +1,5 @@
 /* ---------------------------------------------------------
-   Make It Print — design tokens
+   Make It Print • design tokens
 --------------------------------------------------------- */
 :root {
   --cream: #faf6ea;
@@ -203,7 +203,7 @@ button {
 }
 
 /* ---------------------------------------------------------
-   Nav — floating capsule, sticky
+   Nav • floating capsule, sticky
 --------------------------------------------------------- */
 .nav {
   position: fixed;
@@ -676,7 +676,7 @@ button {
   height: 100%;
   object-fit: cover;
   object-position: center;
-  mix-blend-mode: multiply; /* lets the yellow gradient tint the photo — remove if you want the raw photo instead */
+  mix-blend-mode: multiply; /* lets the yellow gradient tint the photo • remove if you want the raw photo instead */
 }
 
 .hero__block--b {
