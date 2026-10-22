@@ -1,0 +1,507 @@
+.or-page {
+  position: relative;
+  isolation: isolate;
+  min-height: 100vh;
+  background: #fbf8f0;
+  overflow-x: clip;
+}
+.or {
+  position: relative;
+  z-index: 1;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 110px 20px 0;
+  color: #121110;
+}
+.or-mono {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #6c6a63;
+}
+.or-muted {
+  color: #6c6a63;
+}
+.or-error {
+  color: #b3261e;
+}
+
+/* ---- lively background ---- */
+.or-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.or-dots {
+  position: absolute;
+  inset: -28px;
+  background-image: radial-gradient(
+    rgba(18, 17, 16, 0.16) 1.4px,
+    transparent 1.4px
+  );
+  background-size: 28px 28px;
+  animation: or-drift 14s linear infinite;
+  -webkit-mask-image: radial-gradient(
+    ellipse at 50% 40%,
+    #000 25%,
+    transparent 80%
+  );
+  mask-image: radial-gradient(ellipse at 50% 40%, #000 25%, transparent 80%);
+}
+@keyframes or-drift {
+  to {
+    transform: translate(28px, 28px);
+  }
+}
+.or-glow {
+  position: absolute;
+  border-radius: 50%;
+  background: #fbc112;
+  filter: blur(90px);
+  opacity: 0.3;
+}
+.or-glow.g1 {
+  width: 460px;
+  height: 460px;
+  top: -120px;
+  left: -100px;
+}
+.or-glow.g2 {
+  width: 380px;
+  height: 380px;
+  top: 38%;
+  right: -120px;
+  opacity: 0.24;
+}
+.or-glow.g3 {
+  width: 420px;
+  height: 420px;
+  bottom: -160px;
+  left: 30%;
+  opacity: 0.22;
+}
+.or-scan {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    #fbc112 30%,
+    #fbc112 70%,
+    transparent
+  );
+  box-shadow: 0 0 28px 6px rgba(251, 193, 18, 0.45);
+  animation: or-scan 7s ease-in-out infinite;
+}
+@keyframes or-scan {
+  0% {
+    top: -2%;
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.8;
+  }
+  90% {
+    opacity: 0.8;
+  }
+  100% {
+    top: 102%;
+    opacity: 0;
+  }
+}
+.or-par {
+  position: absolute;
+}
+.or-shape svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 10px 14px rgba(18, 17, 16, 0.15));
+}
+.or-ember {
+  position: absolute;
+  bottom: -12px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #fbc112;
+  box-shadow: 0 0 10px 2px rgba(251, 193, 18, 0.7);
+  opacity: 0;
+}
+
+/* hero */
+.or-hero {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 36px;
+}
+.or-seal {
+  position: relative;
+  width: 112px;
+  height: 112px;
+  margin-bottom: 26px;
+  display: grid;
+  place-items: center;
+}
+.or-disc {
+  width: 112px;
+  height: 112px;
+  border-radius: 50%;
+  background: #fbc112;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 12px 40px rgba(251, 193, 18, 0.45);
+  position: relative;
+  z-index: 2;
+}
+.or-check {
+  width: 58px;
+  height: 58px;
+}
+.or-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px solid #fbc112;
+  opacity: 0;
+}
+.or-spin {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  border: 4px solid #fde9a8;
+  border-top-color: #121110;
+  animation: or-rot 0.8s linear infinite;
+  margin-bottom: 22px;
+}
+@keyframes or-rot {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.or-badge {
+  display: inline-block;
+  font: 700 10px "JetBrains Mono", monospace;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: #fde9a8;
+  border: 1px solid #fbc112;
+}
+.or-badge.paid {
+  background: #121110;
+  color: #fbc112;
+  border-color: #121110;
+}
+.or-badge.failed,
+.or-badge.cancelled {
+  background: #fff;
+  border-color: #121110;
+}
+
+.or-title {
+  font-size: clamp(36px, 7vw, 72px);
+  line-height: 1.02;
+  font-weight: 900;
+  letter-spacing: -0.035em;
+  margin: 18px 0 14px;
+  max-width: 900px;
+}
+.or-w {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  padding: 0 0.06em 0.12em;
+}
+.or-w > span {
+  display: inline-block;
+}
+.or-hl {
+  position: relative;
+  z-index: 0;
+}
+.or-hl::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0.14em;
+  height: 0.32em;
+  background: #fbc112;
+  z-index: -1;
+  transform-origin: left;
+  animation: or-hl 0.7s 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+@keyframes or-hl {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+.or-sub {
+  max-width: 560px;
+  color: #4a4842;
+  font-size: 17px;
+  line-height: 1.55;
+  margin: 0 0 14px;
+}
+.or-meta {
+  margin: 0;
+}
+
+/* progress */
+.or-steps {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  max-width: 720px;
+  margin: 8px auto 44px;
+}
+.or-track {
+  position: absolute;
+  top: 19px;
+  left: 12.5%;
+  right: 12.5%;
+  height: 3px;
+  background: rgba(18, 17, 16, 0.1);
+  border-radius: 3px;
+}
+.or-fill {
+  width: 33.33%;
+  height: 100%;
+  background: #fbc112;
+  border-radius: 3px;
+}
+.or-step {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+}
+.or-dot {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: #fff;
+  border: 2px solid rgba(18, 17, 16, 0.15);
+  font-weight: 800;
+  font-size: 14px;
+  color: #6c6a63;
+}
+.or-step.done .or-dot {
+  background: #121110;
+  border-color: #121110;
+  color: #fbc112;
+}
+.or-step.now .or-dot {
+  background: #fbc112;
+  border-color: #fbc112;
+  color: #121110;
+  box-shadow: 0 0 0 6px rgba(251, 193, 18, 0.25);
+}
+.or-step.now .or-mono,
+.or-step.done .or-mono {
+  color: #121110;
+}
+
+/* cards */
+.or-grid {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 20px;
+}
+.or-card {
+  background: #fff;
+  border: 1px solid rgba(18, 17, 16, 0.1);
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 2px 12px rgba(18, 17, 16, 0.04);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.or-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(18, 17, 16, 0.08);
+}
+.or-card h2 {
+  font: 600 12px "JetBrains Mono", monospace;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #6c6a63;
+  margin: 0 0 16px;
+}
+.or-card p {
+  margin: 0 0 6px;
+}
+.or-item {
+  display: grid;
+  grid-template-columns: 56px 1fr auto;
+  gap: 14px;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(18, 17, 16, 0.08);
+}
+.or-item img,
+.or-swatch {
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  object-fit: cover;
+  background: #faf6ea;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  font-size: 20px;
+}
+.or-item p {
+  font-weight: 600;
+  margin: 0 0 2px;
+}
+.or-row,
+.or-total {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+}
+.or-total {
+  border-top: 1px solid #121110;
+  margin-top: 6px;
+  font-size: 20px;
+  font-weight: 800;
+}
+
+/* buttons */
+.or-btn {
+  display: inline-block;
+  margin-top: 24px;
+  padding: 14px 26px;
+  border-radius: 999px;
+  background: #fbc112;
+  color: #121110;
+  font-weight: 800;
+  text-decoration: none;
+  border: 2px solid #fbc112;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.or-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(251, 193, 18, 0.4);
+}
+.or-btn:active {
+  transform: translateY(0);
+}
+.or-btn.ghost {
+  background: transparent;
+  border-color: #121110;
+}
+.or-btn.ghost:hover {
+  box-shadow: none;
+  background: #121110;
+  color: #fbc112;
+}
+
+/* thank-you block */
+.or-thanks {
+  margin-top: 28px;
+  background: #121110;
+  color: #fff;
+  border-radius: 24px;
+  padding: 44px 28px;
+  text-align: center;
+}
+.or-thanks .or-mono {
+  color: #fbc112;
+}
+.or-thanks h2 {
+  font-size: clamp(24px, 4vw, 40px);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin: 12px auto 0;
+  max-width: 640px;
+}
+.or-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.or-thanks .or-btn.ghost {
+  border-color: #fff;
+  color: #fff;
+}
+.or-thanks .or-btn.ghost:hover {
+  background: #fff;
+  color: #121110;
+}
+
+/* marquee (full-bleed, outside .or) */
+.or-marquee {
+  position: relative;
+  z-index: 1;
+  margin: 48px 0 0;
+  background: #fbc112;
+  overflow: hidden;
+  white-space: nowrap;
+  padding: 14px 0;
+}
+.or-marquee div {
+  display: inline-block;
+  animation: or-marq 28s linear infinite;
+  font: 800 13px "JetBrains Mono", monospace;
+  letter-spacing: 0.14em;
+}
+@keyframes or-marq {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* confetti layer (created in JS) */
+.or-confetti {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  overflow: hidden;
+}
+.or-confetti i {
+  position: absolute;
+  display: block;
+  will-change: transform;
+}
+
+@media (max-width: 800px) {
+  .or-grid {
+    grid-template-columns: 1fr;
+  }
+  .or-title {
+    font-size: clamp(34px, 11vw, 52px);
+  }
+  .or-dot {
+    width: 34px;
+    height: 34px;
+    font-size: 12px;
+  }
+  .or-track {
+    top: 16px;
+  }
+  .or-steps .or-mono {
+    font-size: 9px;
+  }
+}

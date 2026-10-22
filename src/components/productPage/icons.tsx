@@ -125,4 +125,20 @@ export const CATEGORY_ICONS: Record<string, ReactElement> = {
     </>
   ),
   festive: I(<path d="M12 3l5 6h-3l4 5h-4l3 4H7l3-4H6l4-5H7l5-6zM12 18v3" />),
+  gaming: I(
+    <>
+      <path d="M6 8h12a3 3 0 013 3v3a3 3 0 01-5.200 2L14 14h-4l-1.800 2A3 3 0 013 14v-3a3 3 0 013-3z" />
+      <path d="M8 10.500v3M6.500 12h3" />
+      <circle cx="15.500" cy="11" r=".8" />
+      <circle cx="17.500" cy="13" r=".8" />
+    </>
+  ),
+  rc: I(
+    <>
+      <path d="M5 16v-3l1.500-3h9l2 3h1.500a1 1 0 011 1v2H5z" />
+      <circle cx="8" cy="17.500" r="2" />
+      <circle cx="16" cy="17.500" r="2" />
+      <path d="M9 7l3-3 3 3" />
+    </>
+  ),
 };

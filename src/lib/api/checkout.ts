@@ -29,17 +29,45 @@ export type Address = {
   pincode: string;
 };
 
+export type OrderItem = {
+  product?: string;
+  title: string;
+  image?: string;
+  price: number;
+  quantity: number;
+  custom?: { name: string; font: string; color: string };
+};
+
+export type Order = {
+  _id: string;
+  status: "pending" | "paid" | "failed" | "cancelled";
+  items: OrderItem[];
+  address: Address;
+  subtotal: number;
+  shipping: number;
+  total: number;
+  razorpayPaymentId?: string;
+  createdAt: string;
+};
+
 export const getAddresses = (t: string) => req<Address[]>(t, "/addresses");
 export const saveAddress = (t: string, a: Address) =>
   req<Address>(t, "/addresses", { method: "POST", body: JSON.stringify(a) });
 
-// Server builds the order from the user's cart and computes the amount itself.
+// Server builds the order (cart, buy-now or custom keychain) and computes the amount itself.
 export const createOrder = (
   t: string,
   body: {
     addressId: string;
     notes?: string;
     buyNow?: { productId: string; quantity: number };
+    custom?: {
+      type: "keychain";
+      name: string;
+      font: string;
+      color: string;
+      quantity: number;
+    };
   }
 ) =>
   req<{
@@ -47,7 +75,7 @@ export const createOrder = (
     razorpayOrderId: string;
     amount: number;
     currency: string;
-  }>(t, "/orders/create", { method: "POST", body: JSON.stringify(body) });
+  }>(t, "/orders", { method: "POST", body: JSON.stringify(body) });
 
 export const verifyPayment = (
   t: string,
@@ -62,3 +90,6 @@ export const verifyPayment = (
     method: "POST",
     body: JSON.stringify(body),
   });
+
+export const getOrder = (t: string, id: string) =>
+  req<Order>(t, `/orders/${id}`);

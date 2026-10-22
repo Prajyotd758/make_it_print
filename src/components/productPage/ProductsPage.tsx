@@ -461,14 +461,15 @@ export default function ProductsPage({
                 <span>All</span>
               </button>
 
-              {CATEGORIES.map((c) => (
+              {CATEGORIES.filter(
+                (c) => counts.total === 0 || (counts.byId[c.id] ?? 0) > 0
+              ).map((c) => (
                 <button
                   key={c.id}
                   className={`pl-cat ${cat === c.id ? "on" : ""}`}
                   onClick={() => changeCat(c.id)}
                 >
                   {CATEGORY_ICONS[c.id]}
-
                   <span>{c.name}</span>
                 </button>
               ))}

@@ -168,15 +168,25 @@ function CheckoutInner() {
         }),
         ...(custom && { custom: { type: "keychain" as const, ...custom } }),
       });
+      const addr = addresses.find((a) => a._id === selected);
       const rzp = new window.Razorpay({
-        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID, // TODO: add key
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
         order_id: order.razorpayOrderId,
         amount: order.amount,
         currency: order.currency,
         name: "Make It Print",
         description: "3D printed products",
-        // image: "/logo.png",  // TODO
-        // prefill: { name, email, contact },  // TODO
+        prefill: {
+          name: addr?.name,
+          contact: addr?.phone,
+          email: "void@razorpay.com",
+        },
+        hidden: { email: true, contact: true },
+        config: {
+          display: {
+            hide: [{ method: "emi" }, { method: "paylater" }],
+          },
+        },
         theme: { color: "#fbc112" },
         handler: async (r: any) => {
           try {
