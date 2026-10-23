@@ -234,6 +234,23 @@
   margin-top: 0;
 } /* price line now pushes down instead */
 
+.cz-colors {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.cz-colors > div {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+@media (max-width: 480px) {
+  .cz-colors {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 860px) {
   .cz {
     padding: 112px 16px 24px;

@@ -8,6 +8,7 @@ export const KEYCHAIN_MAX_NAME = 12;
 export interface KeychainOrder {
   name: string;
   color: string;
+  bgColor: string;
   font: string;
   quantity: number;
 }
@@ -19,6 +20,7 @@ export function parseKeychain(sp: {
   const name = (sp.get("name") ?? "").trim().slice(0, KEYCHAIN_MAX_NAME);
   const color = sp.get("color") ?? "";
   const font = sp.get("font") ?? "";
+  const bgColor = sp.get("bg") ?? "#1a1a1a";
   const quantity = Math.min(
     KEYCHAIN_MAX_QTY,
     Math.max(1, Math.floor(Number(sp.get("qty"))) || 1)
@@ -29,5 +31,5 @@ export function parseKeychain(sp: {
     !FONTS.some((f) => f.label === font)
   )
     return null;
-  return { name, color, font, quantity };
+  return { name, color, font, bgColor, quantity };
 }

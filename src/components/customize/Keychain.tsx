@@ -11,6 +11,7 @@ interface Props {
   text: string;
   color: string;
   fontFile: string;
+  baseColor: string;
   exportRef?: React.MutableRefObject<(() => void) | null>;
 }
 
@@ -18,6 +19,7 @@ interface Api {
   setText: (t: string) => void;
   setColor: (c: string) => void;
   setFont: (f: string) => void;
+  setBaseColor: (c: string) => void;
 }
 
 type Path = ClipperLib.IntPoint[];
@@ -126,6 +128,7 @@ export default function KeychainCanvas({
   text,
   color,
   fontFile,
+  baseColor,
   exportRef,
 }: Props) {
   const mountRef = useRef<HTMLDivElement>(null);
@@ -155,7 +158,7 @@ export default function KeychainCanvas({
     controls.maxDistance = 40;
 
     const mBlack = new THREE.MeshStandardMaterial({
-      color: 0x1a1a1a,
+      color: baseColor,
       roughness: 0.5,
     });
     const mText = new THREE.MeshStandardMaterial({ color, roughness: 0.4 });
@@ -356,6 +359,9 @@ export default function KeychainCanvas({
       setColor: (c) => {
         mText.color.set(c);
       },
+      setBaseColor: (c) => {
+        mBlack.color.set(c);
+      },
       setFont: (file) => {
         const id = ++fontReq;
         const apply = (f: opentype.Font): void => {
@@ -426,6 +432,10 @@ export default function KeychainCanvas({
   useEffect(() => {
     apiRef.current?.setText(text.trim() || "Name");
   }, [text]);
+
+  useEffect(() => {
+    apiRef.current?.setBaseColor(baseColor);
+  }, [baseColor]);
 
   return <div ref={mountRef} className="cz-canvas" />;
 }

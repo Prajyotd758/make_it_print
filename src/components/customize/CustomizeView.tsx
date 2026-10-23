@@ -9,7 +9,18 @@ import { KEYCHAIN_PRICE, KEYCHAIN_FREE_SHIPPING_AT } from "@/lib/keychain";
 import "./customize.css";
 
 const MAX = 15;
-const SWATCHES = [
+const TEXT_SWATCHES: string[] = [
+  "#1a1a1a",
+  "#ffffff",
+  "#fbc112",
+  "#ff5a5f",
+  "#ff8fb1",
+  "#4cc9f0",
+  "#2ecc71",
+  "#9b5de5",
+];
+const BG_SWATCHES: string[] = [
+  "#1a1a1a",
   "#ffffff",
   "#fbc112",
   "#ff5a5f",
@@ -19,10 +30,34 @@ const SWATCHES = [
   "#9b5de5",
 ];
 
+interface SwatchesProps {
+  value: string;
+  options: string[];
+  onChange: (c: string) => void;
+}
+
+function Swatches({ value, options, onChange }: SwatchesProps) {
+  return (
+    <div className="cz-swatches">
+      {options.map((c) => (
+        <button
+          key={c}
+          type="button"
+          aria-label={c}
+          className={`cz-swatch${value === c ? " active" : ""}`}
+          style={{ background: c }}
+          onClick={() => onChange(c)}
+        />
+      ))}
+    </div>
+  );
+}
+
 export default function CustomizeView({ admin = false }: { admin?: boolean }) {
   const router = useRouter();
   const [name, setName] = useState<string>("");
   const [color, setColor] = useState<string>("#ffffff");
+  const [bgColor, setBgColor] = useState<string>("#1a1a1a");
   const [fontFile, setFontFile] = useState<string>(FONTS[0].file);
   const [qty, setQty] = useState<number>(1);
   const exportRef = useRef<(() => void) | null>(null);
@@ -36,6 +71,7 @@ export default function CustomizeView({ admin = false }: { admin?: boolean }) {
       custom: "keychain",
       name: name.trim(),
       color,
+      bg: bgColor,
       font,
       qty: String(qty),
     });
@@ -61,25 +97,23 @@ export default function CustomizeView({ admin = false }: { admin?: boolean }) {
           onChange={(e) => setName(e.target.value)}
         />
 
-        <span className="cz-label">TEXT COLOUR</span>
-        <div className="cz-swatches">
-          {SWATCHES.map((c) => (
-            <button
-              key={c}
-              type="button"
-              aria-label={c}
-              className={`cz-swatch${color === c ? " active" : ""}`}
-              style={{ background: c }}
-              onClick={() => setColor(c)}
+        <div className="cz-colors">
+          <div>
+            <span className="cz-label">TEXT COLOUR</span>
+            <Swatches
+              value={color}
+              options={TEXT_SWATCHES}
+              onChange={setColor}
             />
-          ))}
-          <input
-            type="color"
-            className="cz-picker"
-            value={color}
-            aria-label="Custom colour"
-            onChange={(e) => setColor(e.target.value)}
-          />
+          </div>
+          <div>
+            <span className="cz-label">BACKGROUND COLOUR</span>
+            <Swatches
+              value={bgColor}
+              options={BG_SWATCHES}
+              onChange={setBgColor}
+            />
+          </div>
         </div>
 
         <span className="cz-label">FONT</span>
@@ -115,6 +149,15 @@ export default function CustomizeView({ admin = false }: { admin?: boolean }) {
           </button>
         </div>
 
+        <p className="cz-price">
+          <strong>{inr(total)}</strong> · {inr(KEYCHAIN_PRICE)} each
+          <span>
+            {total >= KEYCHAIN_FREE_SHIPPING_AT
+              ? "Free delivery"
+              : "Free delivery above ₹499"}
+          </span>
+        </p>
+
         <button
           type="button"
           className="cz-buy"
@@ -140,6 +183,7 @@ export default function CustomizeView({ admin = false }: { admin?: boolean }) {
         <Keychain
           text={name}
           color={color}
+          baseColor={bgColor}
           fontFile={fontFile}
           exportRef={admin ? exportRef : undefined}
         />
