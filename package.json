@@ -9,6 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@fontsource-variable/space-grotesk": "^5.3.0",
     "@gsap/react": "^2.1.2",
     "clipper-lib": "^6.4.2",
     "gsap": "^3.15.0",

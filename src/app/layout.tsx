@@ -1,16 +1,17 @@
-import { Space_Grotesk, JetBrains_Mono } from "next/font/google";
+import { JetBrains_Mono } from "next/font/google";
+import "@fontsource-variable/space-grotesk";
 import Nav from "@/components/landingPageComponents/Nav";
 import "./globals.css";
 import Providers from "@/components/provider";
 import Notifications from "@/components/notification/Notifications";
 import GlobalLoader from "@/components/GlobalLoader";
 
-const display = Space_Grotesk({
-  subsets: ["latin"],
-  weight: ["500", "600", "700"],
-  variable: "--font-display",
-  display: "swap",
-});
+// const display = Space_Grotesk({
+//   subsets: ["latin"],
+//   weight: ["500", "600", "700"],
+//   variable: "--font-display",
+//   display: "swap",
+// });
 
 const mono = JetBrains_Mono({
   subsets: ["latin"],
