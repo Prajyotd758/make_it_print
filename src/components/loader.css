@@ -1,0 +1,103 @@
+.gl {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: grid;
+  place-items: center;
+  background: rgba(251, 248, 240, 0.55);
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  backdrop-filter: blur(14px) saturate(1.2);
+  animation: gl-in 0.2s ease both;
+}
+@keyframes gl-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.gl-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 36px 44px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(18, 17, 16, 0.08);
+  box-shadow: 0 20px 60px rgba(18, 17, 16, 0.12);
+  text-align: center;
+  animation: gl-pop 0.35s cubic-bezier(0.2, 0.9, 0.3, 1.3) both;
+}
+@keyframes gl-pop {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* layers being "printed" */
+.gl-stack {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 6px;
+  width: 72px;
+  height: 56px;
+  justify-content: flex-start;
+}
+.gl-stack i {
+  display: block;
+  height: 12px;
+  border-radius: 6px;
+  background: #fbc112;
+  transform-origin: left;
+  transform: scaleX(0);
+  animation: gl-print 1.5s ease-in-out infinite;
+}
+.gl-stack i:nth-child(1) {
+  width: 100%;
+  background: #121110;
+}
+.gl-stack i:nth-child(2) {
+  width: 80%;
+  animation-delay: 0.2s;
+}
+.gl-stack i:nth-child(3) {
+  width: 56%;
+  background: #ffd75e;
+  animation-delay: 0.4s;
+}
+@keyframes gl-print {
+  0% {
+    transform: scaleX(0);
+    opacity: 1;
+  }
+  35%,
+  75% {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scaleX(1);
+    opacity: 0;
+  }
+}
+
+.gl-text {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: #121110;
+}
+.gl-sub {
+  font: 600 10px "JetBrains Mono", monospace;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #6c6a63;
+}

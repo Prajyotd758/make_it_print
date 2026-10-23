@@ -20,6 +20,7 @@ import {
   KEYCHAIN_FREE_SHIPPING_AT,
   parseKeychain,
 } from "@/lib/keychain";
+import { showLoader, hideLoader } from "@/lib/loader";
 
 declare global {
   interface Window {
@@ -189,10 +190,13 @@ function CheckoutInner() {
         },
         theme: { color: "#fbc112" },
         handler: async (r: any) => {
+          showLoader("Confirming your payment…");
           try {
             await verifyPayment(token, { orderId: order.orderId, ...r });
             router.push(`/orders/${order.orderId}?success=1`);
+            // loader stays up and hides itself when the route changes
           } catch (e: any) {
+            hideLoader();
             setError(e.message);
             setPaying(false);
           }
@@ -200,6 +204,7 @@ function CheckoutInner() {
         modal: { ondismiss: () => setPaying(false) },
       });
       rzp.on("payment.failed", (r: any) => {
+        hideLoader();
         setError(r.error?.description ?? "Payment failed");
         setPaying(false);
       });

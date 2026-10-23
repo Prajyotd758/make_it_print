@@ -3,6 +3,7 @@ import Nav from "@/components/landingPageComponents/Nav";
 import "./globals.css";
 import Providers from "@/components/provider";
 import Notifications from "@/components/notification/Notifications";
+import GlobalLoader from "@/components/GlobalLoader";
 
 const display = Space_Grotesk({
   subsets: ["latin"],
@@ -36,6 +37,7 @@ export default function RootLayout({
           <Nav />
           {children}
         </Providers>
+        <GlobalLoader />
         <Notifications />
       </body>
     </html>
