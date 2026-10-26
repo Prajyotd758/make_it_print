@@ -1,3 +1,4 @@
+import type { OrderSummary } from "./profile";
 const BASE = process.env.NEXT_PUBLIC_API_URL;
 
 async function req<T>(
@@ -17,6 +18,12 @@ async function req<T>(
   if (!res.ok) throw new Error(body?.message ?? "Request failed");
   return (body?.data ?? body) as T;
 }
+
+export const listOrders = (t: string, page = 1) =>
+  req<{ orders: OrderSummary[]; page: number; pages: number }>(
+    t,
+    `/orders?page=${page}`
+  );
 
 export type Address = {
   _id?: string;

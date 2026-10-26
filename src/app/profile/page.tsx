@@ -41,6 +41,8 @@ import {
 } from "@/lib/api/profile";
 import DriftingBackground from "@/components/DriftingBackground";
 import "./profile.css";
+import { listOrders } from "@/lib/api/checkout";
+import OrderModal from "@/components/orders/OrderModal";
 
 const TABS = ["profile", "orders", "addresses", "settings"] as const;
 type Tab = (typeof TABS)[number];
@@ -115,7 +117,13 @@ function Field({
   );
 }
 
-function OrderRows({ orders }: { orders: OrderSummary[] }) {
+function OrderRows({
+  orders,
+  onView,
+}: {
+  orders: OrderSummary[];
+  onView: (id: string) => void;
+}) {
   if (!orders.length)
     return (
       <Empty
@@ -153,9 +161,9 @@ function OrderRows({ orders }: { orders: OrderSummary[] }) {
             </span>
             <b>{inr(o.total)}</b>
           </div>
-          <Link href={`/orders/${o._id}`} className="btn btn-ghost">
+          <button className="btn btn-ghost" onClick={() => onView(o._id)}>
             View Details
-          </Link>
+          </button>
         </div>
       ))}
     </>
@@ -365,71 +373,147 @@ function PersonalForm({
   );
 }
 
-function PasswordForm({ token }: { token: string }) {
-  const [f, setF] = useState({ cur: "", next: "", conf: "" });
-  const [err, setErr] = useState<Record<string, string>>({});
-  const [msg, setMsg] = useState("");
-  const [ok, setOk] = useState(false);
-  const [saving, setSaving] = useState(false);
-  async function submit(e: React.FormEvent) {
-    e.preventDefault();
-    setMsg("");
-    setOk(false);
-    const l: Record<string, string> = {};
-    if (!f.cur) l.cur = "Enter your current password";
-    if (f.next.length < 8) l.next = "Use at least 8 characters";
-    if (f.conf !== f.next) l.conf = "Passwords don’t match";
-    setErr(l);
-    if (Object.keys(l).length) return;
-    setSaving(true);
-    try {
-      await changePassword(
-        { currentPassword: f.cur, newPassword: f.next },
-        token
-      );
-      setF({ cur: "", next: "", conf: "" });
-      setOk(true);
-    } catch (x) {
-      setMsg(x instanceof ApiRequestError ? x.message : "Something went wrong");
-    }
-    setSaving(false);
-  }
-  const inp = (k: "cur" | "next" | "conf", l: string) => (
-    <Field label={l} error={err[k] ? [err[k]] : undefined}>
-      <input
-        className="input"
-        type="password"
-        autoComplete={k === "cur" ? "current-password" : "new-password"}
-        value={f[k]}
-        onChange={(e) => setF((p) => ({ ...p, [k]: e.target.value }))}
-      />
-    </Field>
+// function PasswordForm({ token }: { token: string }) {
+//   const [f, setF] = useState({ cur: "", next: "", conf: "" });
+//   const [err, setErr] = useState<Record<string, string>>({});
+//   const [msg, setMsg] = useState("");
+//   const [ok, setOk] = useState(false);
+//   const [saving, setSaving] = useState(false);
+//   async function submit(e: React.FormEvent) {
+//     e.preventDefault();
+//     setMsg("");
+//     setOk(false);
+//     const l: Record<string, string> = {};
+//     if (!f.cur) l.cur = "Enter your current password";
+//     if (f.next.length < 8) l.next = "Use at least 8 characters";
+//     if (f.conf !== f.next) l.conf = "Passwords don’t match";
+//     setErr(l);
+//     if (Object.keys(l).length) return;
+//     setSaving(true);
+//     try {
+//       await changePassword(
+//         { currentPassword: f.cur, newPassword: f.next },
+//         token
+//       );
+//       setF({ cur: "", next: "", conf: "" });
+//       setOk(true);
+//     } catch (x) {
+//       setMsg(x instanceof ApiRequestError ? x.message : "Something went wrong");
+//     }
+//     setSaving(false);
+//   }
+//   const inp = (k: "cur" | "next" | "conf", l: string) => (
+//     <Field label={l} error={err[k] ? [err[k]] : undefined}>
+//       <input
+//         className="input"
+//         type="password"
+//         autoComplete={k === "cur" ? "current-password" : "new-password"}
+//         value={f[k]}
+//         onChange={(e) => setF((p) => ({ ...p, [k]: e.target.value }))}
+//       />
+//     </Field>
+//   );
+//   return (
+//     <form className="card form pf-reveal" onSubmit={submit} noValidate>
+//       <h2>
+//         <Lock size={18} />
+//         Change Password
+//       </h2>
+//       {inp("cur", "Current password")}
+//       {inp("next", "New password")}
+//       {inp("conf", "Confirm new password")}
+//       {msg && (
+//         <p className="form-msg" role="alert">
+//           {msg}
+//         </p>
+//       )}
+//       {ok && (
+//         <p className="form-ok" role="status">
+//           Password updated
+//         </p>
+//       )}
+//       <div className="actions">
+//         <button className="btn btn-primary" disabled={saving}>
+//           {saving ? "Updating…" : "Update password"}
+//         </button>
+//       </div>
+//     </form>
+//   );
+// }
+
+type OrdState = {
+  list: OrderSummary[] | null;
+  page: number;
+  pages: number;
+  busy: boolean;
+  err: boolean;
+};
+
+function OrdersTab({
+  token,
+  onView,
+}: {
+  token: string;
+  onView: (id: string) => void;
+}) {
+  const [s, setS] = useState<OrdState>({
+    list: null,
+    page: 1,
+    pages: 1,
+    busy: false,
+    err: false,
+  });
+
+  const load = useCallback(
+    async (page: number) => {
+      setS((p) => ({ ...p, busy: true, err: false }));
+      try {
+        const r = await listOrders(token, page);
+        setS((p) => ({
+          list: page === 1 ? r.orders : [...(p.list ?? []), ...r.orders],
+          page: r.page,
+          pages: r.pages,
+          busy: false,
+          err: false,
+        }));
+      } catch {
+        setS((p) => ({ ...p, busy: false, err: true }));
+      }
+    },
+    [token]
   );
+
+  useEffect(() => {
+    load(1);
+  }, [load]);
+
   return (
-    <form className="card form pf-reveal" onSubmit={submit} noValidate>
-      <h2>
-        <Lock size={18} />
-        Change Password
-      </h2>
-      {inp("cur", "Current password")}
-      {inp("next", "New password")}
-      {inp("conf", "Confirm new password")}
-      {msg && (
-        <p className="form-msg" role="alert">
-          {msg}
+    <section className="card pf-reveal">
+      <header className="sec-h">
+        <h2>Orders</h2>
+      </header>
+      {s.list ? (
+        <OrderRows orders={s.list} onView={onView} />
+      ) : s.err ? (
+        <p className="muted pad">
+          Could not load orders.{" "}
+          <button className="link" onClick={() => load(1)}>
+            Retry
+          </button>
         </p>
+      ) : (
+        <p className="muted pad">Loading orders…</p>
       )}
-      {ok && (
-        <p className="form-ok" role="status">
-          Password updated
-        </p>
-      )}
-      <div className="actions">
-        <button className="btn btn-primary" disabled={saving}>
-          {saving ? "Updating…" : "Update password"}
+      {s.page < s.pages && (
+        <button
+          className="btn btn-ghost"
+          disabled={s.busy}
+          onClick={() => load(s.page + 1)}
+        >
+          {s.busy ? "Loading…" : "Load more"}
         </button>
-      </div>
-    </form>
+      )}
+    </section>
   );
 }
 
@@ -445,6 +529,7 @@ export default function ProfilePage() {
   const [toast, setToast] = useState("");
   const [tab, setTab] = useState<Tab>("profile");
   const [form, setForm] = useState<null | "new" | string>(null); // "new" or address id being edited
+  const [viewId, setViewId] = useState<string | null>(null);
 
   const flash = (m: string) => {
     setToast(m);
@@ -499,11 +584,7 @@ export default function ProfilePage() {
   }, [load]);
 
   useLayoutEffect(() => {
-    if (
-      state !== "ready" ||
-      matchMedia("(prefers-reduced-motion: reduce)").matches
-    )
-      return;
+    if (state !== "ready") return;
     const ctx = gsap.context(() => {
       gsap.fromTo(
         ".pf-reveal",
@@ -521,12 +602,10 @@ export default function ProfilePage() {
     return () => ctx.revert();
   }, [state, tab, form]);
 
-  const refresh = async () => setData(await getProfile(token!));
-
   async function saveAddress(v: AddressInput) {
     if (form === "new") await createAddress(v, token!);
     else await updateAddress(form!, v, token!);
-    await refresh();
+    setData(await getProfile(token!));
     flash(form === "new" ? "Address added" : "Address updated");
     setForm(null);
   }
@@ -693,7 +772,7 @@ export default function ProfilePage() {
                       </button>
                     )}
                   </header>
-                  <OrderRows orders={data.recentOrders} />
+                  <OrderRows orders={data.recentOrders} onView={setViewId} />
                 </section>
 
                 <div className="two-col">
@@ -705,26 +784,17 @@ export default function ProfilePage() {
                           Settings
                         </h2>
                       </header>
-                      {[
-                        [
-                          User,
-                          "Personal Information",
-                          "Update your name and profile details",
-                        ],
-                      ].map(([Icon, t, s]: any) => (
-                        <button
-                          key={t}
-                          className="row-link"
-                          onClick={() => go("settings")}
-                        >
-                          <Icon size={18} />
-                          <div>
-                            <b>{t}</b>
-                            <small>{s}</small>
-                          </div>
-                          <ChevronRight size={16} />
-                        </button>
-                      ))}
+                      <button
+                        className="row-link"
+                        onClick={() => go("settings")}
+                      >
+                        <User size={18} />
+                        <div>
+                          <b>Personal Information</b>
+                          <small>Update your name and profile details</small>
+                        </div>
+                        <ChevronRight size={16} />
+                      </button>
                     </section>
                   </div>
                   <div className="col">
@@ -792,12 +862,7 @@ export default function ProfilePage() {
             )}
 
             {tab === "orders" && (
-              <section className="card pf-reveal">
-                <header className="sec-h">
-                  <h2>Orders</h2>
-                </header>
-                <OrderRows orders={data.recentOrders} />
-              </section>
+              <OrdersTab token={token!} onView={setViewId} />
             )}
 
             {tab === "addresses" && (
@@ -852,12 +917,16 @@ export default function ProfilePage() {
                   token={token!}
                   onSaved={(name) => setData((d) => d && { ...d, name })}
                 />
-                <PasswordForm token={token!} />
+                {/* <PasswordForm token={token!} /> */}
               </>
             )}
           </>
         )}
       </main>
+
+      {viewId && token && (
+        <OrderModal id={viewId} token={token} onClose={() => setViewId(null)} />
+      )}
       {toast && (
         <div className="toast" role="status">
           {toast}
